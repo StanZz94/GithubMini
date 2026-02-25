@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div className="text-center space-y-6">
-      <h1 className="text-4xl font-bold">
+      <h1 className="text-7xl font-bold">
         GitHub Developer Analytics
       </h1>
 
