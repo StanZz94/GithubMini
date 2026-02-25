@@ -24,3 +24,10 @@ export interface GithubRepo {
   created_at: string;
   updated_at: string;
 }
+
+export interface GithubSearchUser {
+  id: number;
+  login: string;
+  avatar_url: string;
+  html_url: string;
+}

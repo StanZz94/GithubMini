@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { GithubUser, GithubRepo } from "../types/github";
+import type { GithubUser, GithubRepo, GithubSearchUser } from "../types/github";
 
 
 const githubApi = axios.create({
@@ -28,6 +28,18 @@ export const getUserRepos = async (
   });
 
   return response.data;
+};
+
+
+export const searchUsers = async (query: string) => {
+  const response = await githubApi.get("/search/users", {
+    params: {
+      q: query,
+      per_page: 10,
+    },
+  });
+
+  return response.data.items as GithubSearchUser[];
 };
 
 export default githubApi;
