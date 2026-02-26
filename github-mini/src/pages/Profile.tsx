@@ -39,7 +39,7 @@ export default function Profile() {
   // ================= UI =================
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12">
+    <div className="max-w-6xl mx-auto">
       
       {/* HEADER CARD */}
       <div className="bg-white rounded-2xl shadow p-8">
@@ -96,10 +96,8 @@ export default function Profile() {
         </div>
       </div>
 
-      <ActivityHeatmap />
-
       {/* STATS */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <StatCard label="Repositories" value={user.public_repos} />
         <StatCard label="Followers" value={user.followers} />
         <StatCard label="Following" value={user.following} />
@@ -108,6 +106,8 @@ export default function Profile() {
           value={new Date(user.created_at).getFullYear()}
         />
       </div>
+
+      <ActivityHeatmap />
 
       {/* ANALYTICS */}
       {reposLoading && (
