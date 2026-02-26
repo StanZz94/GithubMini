@@ -9,18 +9,24 @@ export default function Home() {
   const { data, isLoading, isError } = useSearchUsers(query);
 
   return (
-    <div className="space-y-8 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold text-center text-gray-300">
+    <div className="max-w-3xl mx-auto py-6">
+      <div className="w-80 h-65 mx-auto mb-4 mt-4">
+        <img
+          src="/octocat.png"
+          alt="Search Illustration"
+          className="w-full h-auto max-w-md mx-auto drop-shadow-[0_0_20px_#ffffff]"
+        />
+      </div>
+      <p className="text-2xl text-center text-gray-300 mb-1">
         Search for GitHub users and explore their statistics.
-      </h1>
-
+      </p>
       {/* Search Input */}
       <input
         type="text"
         placeholder="Search GitHub username..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+        className="w-full px-4 py-3 mb-6 rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
       />
 
       {/* Loading */}
