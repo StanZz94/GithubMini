@@ -9,16 +9,10 @@ export default function Home() {
   const { data, isLoading, isError } = useSearchUsers(query);
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto">
-      <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold">
-          GitHub Developer Analytics
-        </h1>
-
-        <p className="text-gray-600">
-          Search for GitHub users and explore their statistics.
-        </p>
-      </div>
+    <div className="space-y-8 max-w-3xl mx-auto">
+      <h1 className="text-4xl font-bold text-center text-gray-300">
+        Search for GitHub users and explore their statistics.
+      </h1>
 
       {/* Search Input */}
       <input
@@ -30,15 +24,11 @@ export default function Home() {
       />
 
       {/* Loading */}
-      {isLoading && (
-        <p className="text-center text-gray-500">Searching...</p>
-      )}
+      {isLoading && <p className="text-center text-gray-500">Searching...</p>}
 
       {/* Error */}
       {isError && (
-        <p className="text-center text-red-500">
-          Something went wrong.
-        </p>
+        <p className="text-center text-red-500">Something went wrong.</p>
       )}
 
       {/* Results */}
@@ -58,9 +48,7 @@ export default function Home() {
 
               <div>
                 <p className="font-semibold">{user.login}</p>
-                <p className="text-sm text-gray-500">
-                  View Profile →
-                </p>
+                <p className="text-sm text-gray-500">View Profile →</p>
               </div>
             </div>
           ))}
@@ -69,9 +57,7 @@ export default function Home() {
 
       {/* No Results */}
       {data && data.length === 0 && query.length > 2 && (
-        <p className="text-center text-gray-500">
-          No users found.
-        </p>
+        <p className="text-center text-gray-500">No users found.</p>
       )}
     </div>
   );
