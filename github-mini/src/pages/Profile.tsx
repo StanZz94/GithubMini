@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useUserRepos } from "../hooks/useUserRepos";
 import ProfileAnalytics from "../components/profile/ProfileAnalytics";
+import ActivityHeatmap from "../components/profile/ActivityHeatmap";
 
 export default function Profile() {
   const { username } = useParams();
@@ -94,6 +95,8 @@ export default function Profile() {
           </div>
         </div>
       </div>
+
+      <ActivityHeatmap />
 
       {/* STATS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
