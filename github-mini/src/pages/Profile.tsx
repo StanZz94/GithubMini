@@ -42,7 +42,7 @@ export default function Profile() {
     <div className="max-w-6xl mx-auto">
       
       {/* HEADER CARD */}
-      <div className="bg-white rounded-2xl shadow p-8">
+      <div className="bg-gray-200 rounded-tl-2xl border-stone-600 border-b-2 rounded-tr-2xl p-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
           
           {/* Avatar */}
@@ -96,6 +96,8 @@ export default function Profile() {
         </div>
       </div>
 
+      <ActivityHeatmap />
+
       {/* STATS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <StatCard label="Repositories" value={user.public_repos} />
@@ -106,8 +108,6 @@ export default function Profile() {
           value={new Date(user.created_at).getFullYear()}
         />
       </div>
-
-      <ActivityHeatmap />
 
       {/* ANALYTICS */}
       {reposLoading && (
