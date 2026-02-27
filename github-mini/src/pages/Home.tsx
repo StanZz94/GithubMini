@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="max-w-3xl mx-auto py-6">
-      <div className="w-80 h-65 mx-auto mb-4 mt-4">
+      <div className="w-80 h-65 mx-auto mb-6 mt-4">
         <img
           src="/octocat.png"
           alt="Search Illustration"
@@ -26,7 +26,7 @@ export default function Home() {
         placeholder="Search GitHub username..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-3 mb-6 rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
+        className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
       />
 
       {/* Loading */}
@@ -40,19 +40,20 @@ export default function Home() {
       {/* Results */}
       {data && data.length > 0 && (
         <div className="space-y-3">
+          <h1 className="text-3xl text-center font-semibold text-gray-200">Search Results</h1>
           {data.map((user) => (
             <div
               key={user.id}
               onClick={() => navigate(`/profile/${user.login}`)}
-              className="flex items-center gap-4 p-4 bg-white rounded-xl shadow hover:shadow-md cursor-pointer transition"
+              className="flex items-center gap-4 p-2 bg-gray-300 rounded-xl shadow hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition border-2 border-gray-300 hover:border-white"
             >
               <img
                 src={user.avatar_url}
                 alt={user.login}
-                className="w-12 h-12 rounded-full"
+                className="w-14 h-14 rounded-full"
               />
 
-              <div>
+              <div className="flex flex-col h-13 justify-between">
                 <p className="font-semibold">{user.login}</p>
                 <p className="text-sm text-gray-500">View Profile →</p>
               </div>
