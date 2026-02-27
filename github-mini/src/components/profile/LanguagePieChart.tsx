@@ -28,8 +28,8 @@ export default function LanguagePieChart({ repos }: Props) {
   );
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow">
-      <h3 className="text-lg font-semibold mb-4 text-center">
+    <div className="bg-gray-200 p-6 rounded-2xl shadow">
+      <h3 className="text-2xl text-stone-700 font-semibold mb-4 text-center">
         Languages Used
       </h3>
 
@@ -40,7 +40,7 @@ export default function LanguagePieChart({ repos }: Props) {
               data={data}
               dataKey="value"
               nameKey="name"
-              outerRadius={90}
+              outerRadius={110}
               label
             >
               {data.map((_, index) => (
