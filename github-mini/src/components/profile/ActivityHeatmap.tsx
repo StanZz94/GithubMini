@@ -12,7 +12,7 @@ export default function ActivityHeatmap() {
 
   const years = useMemo(() => {
     return Array.from(
-      new Set(data.map((d) => new Date(d.date).getFullYear()))
+      new Set(data.map((d) => new Date(d.date).getFullYear())),
     ).sort((a, b) => b - a);
   }, [data]);
 
@@ -25,11 +25,7 @@ export default function ActivityHeatmap() {
 
     return data
       .filter((d) => new Date(d.date).getFullYear() === activeYear)
-      .sort(
-        (a, b) =>
-          new Date(a.date).getTime() -
-          new Date(b.date).getTime()
-      );
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [data, activeYear]);
 
   // ================= YEAR STATS =================
@@ -64,41 +60,49 @@ export default function ActivityHeatmap() {
 
   // ================= GLOBAL CURRENT STREAK (FIX) =================
 
-const globalCurrentStreak = useMemo(() => {
-  if (!data.length) return 0;
+  const globalCurrentStreak = useMemo(() => {
+    if (!data.length) return 0;
 
-  // IMPORTANT: do NOT convert to ISO
-  const activityMap = new Map(
-    data.map((d) => [d.date.slice(0, 10), d.count])
-  );
+    const activityMap = new Map<string, number>(
+      data.map((d) => [d.date.slice(0, 10), d.count]),
+    );
 
-  let streak = 0;
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const currentDate = new Date(today);
-
-  while (true) {
-    const key =
-      currentDate.getFullYear() +
+    const formatDate = (date: Date) =>
+      date.getFullYear() +
       "-" +
-      String(currentDate.getMonth() + 1).padStart(2, "0") +
+      String(date.getMonth() + 1).padStart(2, "0") +
       "-" +
-      String(currentDate.getDate()).padStart(2, "0");
+      String(date.getDate()).padStart(2, "0");
 
-    const count = activityMap.get(key);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    if (count && count > 0) {
-      streak++;
-      currentDate.setDate(currentDate.getDate() - 1);
-    } else {
-      break;
+    const todayKey = formatDate(today);
+    const todayCount = activityMap.get(todayKey) ?? 0;
+
+    // 🎯 Bonus if today has contributions
+    const bonus = todayCount > 0 ? 1 : 0;
+
+    // Start checking from yesterday ONLY
+    const currentDate = new Date(today);
+    currentDate.setDate(currentDate.getDate() - 1);
+
+    let streak = 0;
+
+    while (true) {
+      const key = formatDate(currentDate);
+      const count = activityMap.get(key) ?? 0;
+
+      if (count > 0) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
     }
-  }
 
-  return streak;
-}, [data]);
+    return streak + bonus;
+  }, [data]);
 
   // ================= COLOR SCALE =================
 
@@ -116,11 +120,7 @@ const globalCurrentStreak = useMemo(() => {
   // ================= LOADING =================
 
   if (isLoading) {
-    return (
-      <div className="text-center text-gray-500">
-        Loading activity...
-      </div>
-    );
+    return <div className="text-center text-gray-500">Loading activity...</div>;
   }
 
   if (!activeYear || filteredData.length === 0) {
@@ -176,9 +176,7 @@ const globalCurrentStreak = useMemo(() => {
         <span>
           🔥 {activeYear} Longest streak: {stats.longestStreak} days
         </span>
-        <span>
-          ⚡ Current streak: {globalCurrentStreak} days
-        </span>
+        <span>⚡ Current streak: {globalCurrentStreak} days</span>
       </div>
     </section>
   );
