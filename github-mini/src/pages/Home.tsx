@@ -39,26 +39,31 @@ export default function Home() {
 
       {/* Results */}
       {data && data.length > 0 && (
-        <div className="space-y-3">
-          <h1 className="text-3xl text-center font-semibold text-gray-200">Search Results</h1>
-          {data.map((user) => (
-            <div
-              key={user.id}
-              onClick={() => navigate(`/profile/${user.login}`)}
-              className="flex items-center gap-4 p-2 bg-gray-300 rounded-xl shadow hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition border-2 border-gray-300 hover:border-white"
-            >
-              <img
-                src={user.avatar_url}
-                alt={user.login}
-                className="w-14 h-14 rounded-full"
-              />
+        <div className="space-y-6">
+          <h1 className="text-3xl text-center font-semibold text-gray-200">
+            Search Results
+          </h1>
 
-              <div className="flex flex-col h-13 justify-between">
-                <p className="font-semibold">{user.login}</p>
-                <p className="text-sm text-gray-500">View Profile →</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {data.map((user) => (
+              <div
+                key={user.id}
+                onClick={() => navigate(`/profile/${user.login}`)}
+                className="flex items-center gap-4 p-4 bg-gray-300 rounded-xl shadow hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition border-2 border-gray-300 hover:border-white"
+              >
+                <img
+                  src={user.avatar_url}
+                  alt={user.login}
+                  className="w-14 h-14 rounded-full"
+                />
+
+                <div className="flex flex-col justify-center">
+                  <p className="font-semibold text-lg">{user.login}</p>
+                  <p className="text-sm text-gray-600">View Profile →</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
