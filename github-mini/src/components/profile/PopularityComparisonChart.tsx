@@ -26,6 +26,25 @@ export default function PopularityComparisonChart({ repos }: Props) {
       forks: repo.forks_count,
     }));
 
+  // 🔥 Check if everything is 0
+  const allZero = data.every(
+    (repo) => repo.stars === 0 && repo.forks === 0
+  );
+
+  if (allZero) {
+    return (
+      <div className="bg-white p-6 rounded-2xl shadow text-center">
+        <h3 className="text-xl font-bold mb-2">
+          Stars vs Forks (Top Repos)
+        </h3>
+
+        <p className="text-gray-500">
+          No stars or forks data available.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white p-6 rounded-2xl shadow">
       <h3 className="text-xl font-bold mb-4 text-center">
