@@ -27,26 +27,29 @@ export default function PopularityComparisonChart({ repos }: Props) {
     }));
 
   // 🔥 Check if everything is 0
-  const allZero = data.every(
-    (repo) => repo.stars === 0 && repo.forks === 0
-  );
+  const allZero = data.every((repo) => repo.stars === 0 && repo.forks === 0);
 
   if (allZero) {
     return (
-      <div className="bg-white p-6 rounded-2xl shadow text-center">
-        <h3 className="text-xl font-bold mb-2">
-          Stars vs Forks (Top Repos)
-        </h3>
+      <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
+        <h3 className="text-xl font-bold mb-12">Stars vs Forks (Top Repos)</h3>
 
-        <p className="text-gray-500">
-          No stars or forks data available.
+        <div className="w-40 h-auto mx-auto">
+          <img
+            src="/noData.png"
+            alt="No data"
+            className="mx-auto w-full h-auto"
+          />
+        </div>
+        <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
+          No stars or forks yet!
         </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow">
+    <div className="bg-gray-200 p-6 rounded-2xl shadow">
       <h3 className="text-xl font-bold mb-4 text-center">
         Stars vs Forks (Top Repos)
       </h3>
