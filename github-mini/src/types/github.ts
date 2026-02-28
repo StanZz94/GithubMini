@@ -23,6 +23,7 @@ export interface GithubRepo {
   html_url: string;
   created_at: string;
   updated_at: string;
+  size: number;
 }
 
 export interface GithubSearchUser {
