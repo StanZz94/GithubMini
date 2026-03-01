@@ -12,6 +12,8 @@ interface Props {
 }
 
 export default function LanguagePieChart({ repos }: Props) {
+  if (!repos.length) return null;
+
   const languageMap: Record<string, number> = {};
 
   repos.forEach((repo) => {
@@ -26,6 +28,29 @@ export default function LanguagePieChart({ repos }: Props) {
       value,
     })
   );
+
+  // 🔥 If no languages detected
+  if (data.length === 0) {
+    return (
+      <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
+        <h3 className="text-2xl text-stone-700 font-semibold mb-12">
+          Languages Used
+        </h3>
+
+        <div className="w-40 h-auto mx-auto">
+          <img
+            src="/noData.png"
+            alt="No data"
+            className="mx-auto w-full h-auto"
+          />
+        </div>
+
+        <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
+          No language data available!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-200 p-6 rounded-2xl shadow">
