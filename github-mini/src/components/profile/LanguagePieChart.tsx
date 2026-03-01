@@ -53,7 +53,7 @@ export default function LanguagePieChart({ repos }: Props) {
   }
 
   return (
-    <div className="bg-gray-200 p-6 rounded-2xl shadow">
+    <div className="bg-gray-200 px-6 py-4 rounded-2xl shadow">
       <h3 className="text-2xl text-stone-700 font-semibold mb-4 text-center">
         Languages Used
       </h3>
