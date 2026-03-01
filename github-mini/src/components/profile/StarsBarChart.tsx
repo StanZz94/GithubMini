@@ -29,7 +29,7 @@ export default function StarsBarChart({ repos }: Props) {
   if (allZero) {
     return (
       <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
-        <h3 className="text-lg font-semibold mb-12">
+        <h3 className="text-2xl text-stone-700 font-semibold mb-12">
           Top Starred Repositories
         </h3>
 
@@ -42,7 +42,7 @@ export default function StarsBarChart({ repos }: Props) {
         </div>
 
         <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
-          No stars yet!
+          There are no stars yet!
         </p>
       </div>
     );
@@ -50,7 +50,7 @@ export default function StarsBarChart({ repos }: Props) {
 
   return (
     <div className="bg-gray-200 p-6 rounded-2xl shadow">
-      <h3 className="text-lg font-semibold mb-4 text-center">
+      <h3 className="text-2xl text-stone-700 font-semibold mb-4 text-center">
         Top Starred Repositories
       </h3>
 
