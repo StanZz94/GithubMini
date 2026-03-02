@@ -1,15 +1,19 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchUsers } from "../hooks/useSearchUsers";
+import { useSearch } from "../context/SearchContext";
 
 export default function Home() {
-  const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
-  const { data, isLoading, isError } = useSearchUsers(query);
+  // ✅ Use context instead of local state
+  const { search, setSearch } = useSearch();
+
+  const { data, isLoading, isError } = useSearchUsers(search);
 
   return (
     <div className="max-w-3xl mx-auto py-6">
+      
+      {/* Illustration */}
       <div className="w-80 h-65 mx-auto mb-6 mt-4">
         <img
           src="/octocat.png"
@@ -17,24 +21,32 @@ export default function Home() {
           className="w-full h-auto max-w-md mx-auto drop-shadow-[0_0_20px_#ffffff]"
         />
       </div>
-      <p className="text-2xl text-center text-gray-300 mb-1">
+
+      <p className="text-2xl text-center text-gray-300 mb-6">
         Search for GitHub users and explore their statistics.
       </p>
-      {/* Search Input */}
+
+      {/* 🔎 Search Input */}
       <input
         type="text"
         placeholder="Search GitHub username..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 
+        focus:outline-none focus:ring-2 focus:ring-white 
+        focus:drop-shadow-[0_0_10px_#ffffff]"
       />
 
       {/* Loading */}
-      {isLoading && <p className="text-center text-gray-500">Searching...</p>}
+      {isLoading && (
+        <p className="text-center text-gray-500">Searching...</p>
+      )}
 
       {/* Error */}
       {isError && (
-        <p className="text-center text-red-500">Something went wrong.</p>
+        <p className="text-center text-red-500">
+          Something went wrong.
+        </p>
       )}
 
       {/* Results */}
@@ -49,7 +61,9 @@ export default function Home() {
               <div
                 key={user.id}
                 onClick={() => navigate(`/profile/${user.login}`)}
-                className="flex items-center gap-4 p-4 bg-gray-300 rounded-xl shadow hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition border-2 border-gray-300 hover:border-white"
+                className="flex items-center gap-4 p-4 bg-gray-300 rounded-xl shadow 
+                hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition 
+                border-2 border-gray-300 hover:border-white"
               >
                 <img
                   src={user.avatar_url}
@@ -58,8 +72,12 @@ export default function Home() {
                 />
 
                 <div className="flex flex-col justify-center">
-                  <p className="font-semibold text-lg">{user.login}</p>
-                  <p className="text-sm text-gray-600">View Profile →</p>
+                  <p className="font-semibold text-lg">
+                    {user.login}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    View Profile →
+                  </p>
                 </div>
               </div>
             ))}
@@ -68,8 +86,10 @@ export default function Home() {
       )}
 
       {/* No Results */}
-      {data && data.length === 0 && query.length > 2 && (
-        <p className="text-center text-gray-500">No users found.</p>
+      {data && data.length === 0 && search.length > 2 && (
+        <p className="text-center text-gray-500">
+          No users found.
+        </p>
       )}
     </div>
   );
