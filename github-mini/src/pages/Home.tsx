@@ -39,12 +39,12 @@ export default function Home() {
 
       {/* Loading */}
       {isLoading && (
-        <p className="text-center text-gray-500">Searching...</p>
+        <p className="text-center text-xl font-semibold text-gray-200 mt-4 drop-shadow-[0_0_10px_#ffffff]">Searching...</p>
       )}
 
       {/* Error */}
       {isError && (
-        <p className="text-center text-red-500">
+        <p className="text-center text-xl font-semibold text-red-500 mt-4">
           Something went wrong.
         </p>
       )}
