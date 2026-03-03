@@ -35,7 +35,7 @@ export const searchUsers = async (query: string) => {
   const response = await githubApi.get("/search/users", {
     params: {
       q: query,
-      per_page: 20,
+      per_page: 18,
     },
   });
 
