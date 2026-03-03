@@ -11,14 +11,13 @@ export default function Home() {
   const { data, isLoading, isError } = useSearchUsers(search);
 
   return (
-    <div className="max-w-3xl mx-auto py-6">
-      
+    <div className="max-w-7xl mx-auto py-6 px-4">
       {/* Illustration */}
-      <div className="w-80 h-65 mx-auto mb-6 mt-4">
+      <div className="w-80 mx-auto mb-6 mt-4">
         <img
           src="/octocat.png"
           alt="Search Illustration"
-          className="w-full h-auto max-w-md mx-auto drop-shadow-[0_0_20px_#ffffff]"
+          className="w-full h-auto drop-shadow-[0_0_20px_#ffffff]"
         />
       </div>
 
@@ -27,19 +26,23 @@ export default function Home() {
       </p>
 
       {/* 🔎 Search Input */}
-      <input
-        type="text"
-        placeholder="Search GitHub username..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 
-        focus:outline-none focus:ring-2 focus:ring-white 
-        focus:drop-shadow-[0_0_10px_#ffffff]"
-      />
+      <div className="max-w-xl mx-auto">
+        <input
+          type="text"
+          placeholder="Search GitHub username..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 
+          focus:outline-none focus:ring-2 focus:ring-white 
+          focus:drop-shadow-[0_0_10px_#ffffff]"
+        />
+      </div>
 
       {/* Loading */}
       {isLoading && (
-        <p className="text-center text-xl font-semibold text-gray-200 mt-4 drop-shadow-[0_0_10px_#ffffff]">Searching...</p>
+        <p className="text-center text-xl font-semibold text-gray-200 mt-4 drop-shadow-[0_0_10px_#ffffff]">
+          Searching...
+        </p>
       )}
 
       {/* Error */}
@@ -56,7 +59,7 @@ export default function Home() {
             Search Results
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {data.map((user) => (
               <div
                 key={user.id}
@@ -72,12 +75,8 @@ export default function Home() {
                 />
 
                 <div className="flex flex-col justify-center">
-                  <p className="font-semibold text-lg">
-                    {user.login}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    View Profile →
-                  </p>
+                  <p className="font-semibold text-lg">{user.login}</p>
+                  <p className="text-sm text-gray-600">View Profile →</p>
                 </div>
               </div>
             ))}
@@ -87,9 +86,7 @@ export default function Home() {
 
       {/* No Results */}
       {data && data.length === 0 && search.length > 2 && (
-        <p className="text-center text-gray-500">
-          No users found.
-        </p>
+        <p className="text-center text-gray-500">No users found.</p>
       )}
     </div>
   );
