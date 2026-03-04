@@ -122,16 +122,16 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center gap-8 mt-10">
+          <div className="flex justify-center gap-8 mt-24">
             {hasMore && (
               <button
                 onClick={() =>
                   setPage((prev) => prev + 1)
                 }
                 disabled={isLoading}
-                className="w-48 h-auto"
+                className="w-48 h-auto cursor-pointer"
               >
-                <img src="/more.png" alt="More" className="w-full h-auto" />
+                <img src="/more.png" alt="More" className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF]  transition" />
               </button>
             )}
 
@@ -141,9 +141,9 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="w-48 h-auto"
+                className="w-48 h-auto cursor-pointer"
               >
-                <img src="/less.png" alt="Less" className="w-full h-auto" />
+                <img src="/less.png" alt="Less" className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD]  transition" />
               </button>
             )}
           </div>
