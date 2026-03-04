@@ -54,25 +54,25 @@ export default function Home() {
         />
       </div>
 
-      <p className="text-2xl text-center text-gray-300 mb-6">
+      <p className="text-2xl text-center text-gray-300 mb-4">
         Search for GitHub users and explore their statistics.
       </p>
 
       {/* Search Input */}
-      <div className="max-w-xl mx-auto">
+      <div className="max-w-2xl mx-auto">
         <input
           type="text"
           placeholder="Search GitHub username..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 
-          focus:outline-none focus:ring-2 focus:ring-white"
+          focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
         />
       </div>
 
       {/* Loading */}
       {isLoading && page === 1 && (
-        <p className="text-center text-xl font-semibold text-gray-200">
+        <p className="text-center text-xl font-semibold text-gray-200 drop-shadow-[0_0_10px_#ffffff]">
           Searching...
         </p>
       )}
