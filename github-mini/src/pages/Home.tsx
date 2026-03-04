@@ -122,17 +122,16 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center gap-4 mt-10">
+          <div className="flex justify-center gap-8 mt-10">
             {hasMore && (
               <button
                 onClick={() =>
                   setPage((prev) => prev + 1)
                 }
                 disabled={isLoading}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg 
-                hover:bg-indigo-700 disabled:opacity-50"
+                className="w-48 h-auto"
               >
-                {isLoading ? "Loading..." : "Load More"}
+                <img src="/more.png" alt="More" className="w-full h-auto" />
               </button>
             )}
 
@@ -142,10 +141,9 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="px-6 py-2 bg-gray-500 text-white rounded-lg 
-                hover:bg-gray-600"
+                className="w-48 h-auto"
               >
-                Hide
+                <img src="/less.png" alt="Less" className="w-full h-auto" />
               </button>
             )}
           </div>
