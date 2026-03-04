@@ -32,7 +32,9 @@ export default function PopularityComparisonChart({ repos }: Props) {
   if (allZero) {
     return (
       <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
-        <h3 className="text-xl font-bold mb-12">Stars vs Forks (Top Repos)</h3>
+        <h3 className="text-2xl text-stone-700 font-semibold mb-12">
+          Stars vs Forks (Top Repos)
+        </h3>
 
         <div className="w-40 h-auto mx-auto">
           <img
@@ -49,8 +51,8 @@ export default function PopularityComparisonChart({ repos }: Props) {
   }
 
   return (
-    <div className="bg-gray-200 p-6 rounded-2xl shadow">
-      <h3 className="text-xl font-bold mb-4 text-center">
+    <div className="bg-gray-200 px-6 py-4 rounded-2xl shadow">
+      <h3 className="text-2xl text-stone-700 font-semibold mb-12 text-center">
         Stars vs Forks (Top Repos)
       </h3>
 

@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function RepoSizeChart({ repos }: Props) {
-  const hasRepos = repos.length > 100000;
+  const hasRepos = repos.length > 0;
 
   const data = hasRepos
     ? repos
@@ -54,7 +54,7 @@ export default function RepoSizeChart({ repos }: Props) {
         Repository Size (Top 10)
       </h3>
 
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data}>
           <XAxis dataKey="name" hide />
           <YAxis />
