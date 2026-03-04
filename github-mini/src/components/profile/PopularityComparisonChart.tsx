@@ -56,16 +56,18 @@ export default function PopularityComparisonChart({ repos }: Props) {
         Stars vs Forks (Top Repos)
       </h3>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
-          <XAxis dataKey="name" hide />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="stars" fill="#f59e0b" />
-          <Bar dataKey="forks" fill="#10b981" />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="w-full h-55">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <XAxis dataKey="name" hide />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="stars" fill="#f59e0b" />
+            <Bar dataKey="forks" fill="#10b981" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export default function StarsBarChart({ repos }: Props) {
         Top Starred Repositories
       </h3>
 
-      <div className="h-64">
+      <div className="h-55 w-full">
         <ResponsiveContainer>
           <BarChart data={topRepos}>
             <XAxis dataKey="name" />

@@ -34,11 +34,7 @@ export default function RepoSizeChart({ repos }: Props) {
         </h3>
 
         <div className="w-40 mx-auto">
-          <img
-            src="/noData.png"
-            alt="No data"
-            className="w-full h-auto"
-          />
+          <img src="/noData.png" alt="No data" className="w-full h-auto" />
         </div>
 
         <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
@@ -53,15 +49,16 @@ export default function RepoSizeChart({ repos }: Props) {
       <h3 className="text-2xl text-stone-700 font-semibold mb-12 text-center">
         Repository Size (Top 10)
       </h3>
-
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={data}>
-          <XAxis dataKey="name" hide />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="size" fill="#6366f1" />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="w-full h-55">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data}>
+            <XAxis dataKey="name" hide />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="size" fill="#6366f1" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
