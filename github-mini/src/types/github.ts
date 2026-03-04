@@ -32,3 +32,8 @@ export interface GithubSearchUser {
   avatar_url: string;
   html_url: string;
 }
+
+export interface GithubSearchResponse {
+  items: GithubSearchUser[];
+  total: number;
+}
