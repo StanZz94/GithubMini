@@ -17,6 +17,7 @@ export default function Home() {
   useEffect(() => {
     // eslint-disable-next-line
     setPage(1);
+    setUsers([]);
   }, [search]);
 
   // ➕ Append users safely
@@ -153,7 +154,7 @@ export default function Home() {
 
       {/* No Results */}
       {data && users.length === 0 && search.length > 2 && (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-xl font-semibold text-gray-200 drop-shadow-[0_0_10px_#ffffff]">
           No users found.
         </p>
       )}
