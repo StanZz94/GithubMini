@@ -23,7 +23,6 @@ export default function Home() {
   // ➕ Append users safely
   useEffect(() => {
     if (!data?.items) return;
-
     // eslint-disable-next-line
     setUsers((prev) => {
       // If first page → replace
@@ -31,18 +30,20 @@ export default function Home() {
 
       // Prevent duplicates
       const existingIds = new Set(prev.map((u) => u.id));
-
-      const newItems = data.items.filter(
-        (user) => !existingIds.has(user.id)
-      );
+      const newItems = data.items.filter((user) => !existingIds.has(user.id));
 
       return [...prev, ...newItems];
     });
   }, [data, page]);
 
-  const hasMore = data
-    ? users.length < data.total
-    : false;
+  const hasMore = data ? users.length < data.total : false;
+
+  // ✅ CLEAR HANDLER (instant reset)
+  const handleClear = () => {
+    setSearch("");
+    setUsers([]);
+    setPage(1);
+  };
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4">
@@ -60,15 +61,27 @@ export default function Home() {
       </p>
 
       {/* Search Input */}
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto relative mb-10">
         <input
           type="text"
           placeholder="Search GitHub username..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-3 mb-10 rounded-lg bg-gray-300 
-          focus:outline-none focus:ring-2 focus:ring-white focus:drop-shadow-[0_0_10px_#ffffff]"
+          className="w-full px-4 py-3 pr-12 rounded-lg bg-gray-300 
+          focus:outline-none focus:ring-2 focus:ring-white 
+          focus:drop-shadow-[0_0_10px_#ffffff]"
         />
+
+        {search && (
+          <button
+            onClick={handleClear}
+            className="absolute right-3 top-1/2 -translate-y-1/2 
+            text-gray-600 hover:text-black text-2xl font-bold 
+            transition"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       {/* Loading */}
@@ -96,9 +109,7 @@ export default function Home() {
             {users.map((user) => (
               <div
                 key={user.id}
-                onClick={() =>
-                  navigate(`/profile/${user.login}`)
-                }
+                onClick={() => navigate(`/profile/${user.login}`)}
                 className="flex items-center gap-4 p-4 bg-gray-300 rounded-xl shadow 
                 hover:drop-shadow-[0_0_10px_#ffffff] cursor-pointer transition 
                 border-2 border-gray-300 hover:border-white"
@@ -110,12 +121,8 @@ export default function Home() {
                 />
 
                 <div>
-                  <p className="font-semibold text-lg">
-                    {user.login}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    View Profile →
-                  </p>
+                  <p className="font-semibold text-lg">{user.login}</p>
+                  <p className="text-sm text-gray-600">View Profile →</p>
                 </div>
               </div>
             ))}
@@ -125,13 +132,15 @@ export default function Home() {
           <div className="flex justify-center gap-8 mt-24">
             {hasMore && (
               <button
-                onClick={() =>
-                  setPage((prev) => prev + 1)
-                }
+                onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
                 className="w-48 h-auto cursor-pointer"
               >
-                <img src="/more.png" alt="More" className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF]  transition" />
+                <img
+                  src="/more.png"
+                  alt="More"
+                  className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF] transition"
+                />
               </button>
             )}
 
@@ -143,7 +152,11 @@ export default function Home() {
                 }}
                 className="w-48 h-auto cursor-pointer"
               >
-                <img src="/less.png" alt="Less" className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD]  transition" />
+                <img
+                  src="/less.png"
+                  alt="Less"
+                  className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD] transition"
+                />
               </button>
             )}
           </div>
