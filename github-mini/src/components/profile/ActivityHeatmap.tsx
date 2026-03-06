@@ -146,10 +146,10 @@ export default function ActivityHeatmap() {
             <button
               key={year}
               onClick={() => setSelectedYear(year)}
-              className={`px-3 py-1 text-sm font-semibold rounded-lg transition ${
+              className={`px-3 py-1 text-sm font-semibold border border-transparent rounded-lg transition hover:underline ${
                 activeYear === year
-                  ? "bg-black text-white"
-                  : "bg-gray-200 hover:bg-gray-300"
+                  ? "bg-black text-white "
+                  : "bg-gray-200 hover:bg-gray-300 hover:border-black"
               }`}
             >
               {year}

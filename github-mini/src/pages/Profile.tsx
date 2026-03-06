@@ -75,7 +75,7 @@ export default function Profile() {
               href={`https://github.com/${user.login}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-block mt-3 px-5 py-2 bg-black text-white rounded-lg text-sm hover:opacity-90 transition"
+              className="inline-block mt-3 px-5 py-2 bg-black text-white rounded-lg text-sm hover:opacity-90 transition hover:underline"
             >
               View on GitHub
             </a>
