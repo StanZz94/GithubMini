@@ -13,26 +13,19 @@ export default function Profile() {
     isError: userError,
   } = useUser(username || "");
 
-  const {
-    data: repos,
-    isLoading: reposLoading,
-  } = useUserRepos(username || "");
+  const { data: repos, isLoading: reposLoading } = useUserRepos(username || "");
 
   // ================= LOADING =================
 
   if (userLoading) {
     return (
-      <div className="text-center py-20 text-gray-500">
-        Loading profile...
-      </div>
+      <div className="text-center py-20 text-gray-500">Loading profile...</div>
     );
   }
 
   if (userError || !user) {
     return (
-      <div className="text-center py-20 text-red-500">
-        User not found.
-      </div>
+      <div className="text-center py-20 text-red-500">User not found.</div>
     );
   }
 
@@ -40,11 +33,9 @@ export default function Profile() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      
       {/* HEADER CARD */}
-      <div className="bg-gray-200 rounded-tl-2xl border-stone-600 border-b-2 rounded-tr-2xl p-8">
+      <div className="bg-gray-200 rounded-2xl pt-8 px-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-          
           {/* Avatar */}
           <img
             src={user.avatar_url}
@@ -55,15 +46,11 @@ export default function Profile() {
           {/* User Info */}
           <div className="flex-1 space-y-3 text-center md:text-left">
             <div>
-              <h1 className="text-3xl font-bold">
-                {user.name || user.login}
-              </h1>
+              <h1 className="text-3xl font-bold">{user.name || user.login}</h1>
               <p className="text-gray-500">@{user.login}</p>
             </div>
 
-            {user.bio && (
-              <p className="text-gray-700">{user.bio}</p>
-            )}
+            {user.bio && <p className="text-gray-700">{user.bio}</p>}
 
             <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm text-gray-600">
               {user.location && <span>📍 {user.location}</span>}
@@ -93,10 +80,11 @@ export default function Profile() {
               View on GitHub
             </a>
           </div>
-        </div>
-      </div>
 
-      <ActivityHeatmap />
+        </div>
+        <div className="w-full h-0.5 bg-gray-500 my-4 "></div>
+        <ActivityHeatmap />
+      </div>
 
       {/* STATS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
@@ -111,29 +99,19 @@ export default function Profile() {
 
       {/* ANALYTICS */}
       {reposLoading && (
-        <div className="text-center text-gray-500">
-          Loading analytics...
-        </div>
+        <div className="text-center text-gray-500">Loading analytics...</div>
       )}
 
-      {repos && repos.length > 0 && (
-        <ProfileAnalytics repos={repos} />
-      )}
+      {repos && repos.length > 0 && <ProfileAnalytics repos={repos} />}
     </div>
   );
 }
 
 /* ================= STAT CARD ================= */
 
-function StatCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: number | string;
-}) {
+function StatCard({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow text-center">
+    <div className="bg-gray-200 p-6 rounded-xl shadow text-center">
       <p className="text-2xl font-bold">{value}</p>
       <p className="text-gray-500 text-sm mt-1">{label}</p>
     </div>
