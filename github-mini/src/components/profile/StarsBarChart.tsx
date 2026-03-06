@@ -57,7 +57,7 @@ export default function StarsBarChart({ repos }: Props) {
       <div className="h-55 w-full">
         <ResponsiveContainer>
           <BarChart data={topRepos}>
-            <XAxis dataKey="name" />
+            <XAxis dataKey="name" hide />
             <YAxis />
             <Tooltip />
             <Bar dataKey="stars" fill="#f59e0b" />
