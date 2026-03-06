@@ -52,11 +52,11 @@ export default function PopularityComparisonChart({ repos }: Props) {
 
   return (
     <div className="bg-gray-200 px-6 py-4 rounded-2xl shadow">
-      <h3 className="text-2xl text-stone-700 font-semibold mb-12 text-center">
+      <h3 className="text-2xl text-stone-700 font-semibold mb-4 text-center">
         Stars vs Forks (Top Repos)
       </h3>
 
-      <div className="w-full h-55">
+      <div className="w-full h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <XAxis dataKey="name" hide />
