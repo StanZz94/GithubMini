@@ -2,33 +2,34 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import { useSearch } from "../context/SearchContext";
+import { useDebounce } from "../hooks/useDebounce";
 import type { GithubSearchUser } from "../types/github";
 
 export default function Home() {
   const navigate = useNavigate();
   const { search, setSearch } = useSearch();
 
+  const debouncedSearch = useDebounce(search, 400);
+
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<GithubSearchUser[]>([]);
 
-  const { data, isLoading, isError } = useSearchUsers(search, page);
+  const { data, isLoading, isError } = useSearchUsers(debouncedSearch, page);
 
-  // 🔄 Reset when search changes
+  // 🔄 Reset when search changes (debounced)
   useEffect(() => {
     // eslint-disable-next-line
     setPage(1);
     setUsers([]);
-  }, [search]);
+  }, [debouncedSearch]);
 
   // ➕ Append users safely
   useEffect(() => {
     if (!data?.items) return;
     // eslint-disable-next-line
     setUsers((prev) => {
-      // If first page → replace
       if (page === 1) return data.items;
 
-      // Prevent duplicates
       const existingIds = new Set(prev.map((u) => u.id));
       const newItems = data.items.filter((user) => !existingIds.has(user.id));
 
@@ -38,7 +39,6 @@ export default function Home() {
 
   const hasMore = data ? users.length < data.total : false;
 
-  // ✅ CLEAR HANDLER (instant reset)
   const handleClear = () => {
     setSearch("");
     setUsers([]);
@@ -76,8 +76,7 @@ export default function Home() {
           <button
             onClick={handleClear}
             className="absolute right-3 top-1/2 -translate-y-1/2 
-            text-gray-600 hover:text-black text-2xl font-bold 
-            transition"
+            text-gray-600 hover:text-black text-2xl font-bold transition"
           >
             ✕
           </button>
@@ -134,12 +133,12 @@ export default function Home() {
               <button
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
-                className="w-48 h-auto cursor-pointer"
+                className="w-48 cursor-pointer"
               >
                 <img
                   src="/more.png"
                   alt="More"
-                  className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF] transition"
+                  className="w-full drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF] transition"
                 />
               </button>
             )}
@@ -150,12 +149,12 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="w-48 h-auto cursor-pointer"
+                className="w-48 cursor-pointer"
               >
                 <img
                   src="/less.png"
                   alt="Less"
-                  className="w-full h-auto drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD] transition"
+                  className="w-full drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD] transition"
                 />
               </button>
             )}
