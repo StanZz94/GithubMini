@@ -65,7 +65,7 @@ export default function LanguagePieChart({ repos }: Props) {
               data={data}
               dataKey="value"
               nameKey="name"
-              outerRadius={110}
+              outerRadius={100}
               label
             >
               {data.map((_, index) => (
