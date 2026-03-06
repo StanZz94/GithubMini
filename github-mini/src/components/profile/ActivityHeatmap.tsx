@@ -120,7 +120,7 @@ export default function ActivityHeatmap() {
   // ================= LOADING =================
 
   if (isLoading) {
-    return <div className="text-center text-gray-500">Loading activity...</div>;
+    return <div className="text-center text-gray-600 p-4 font-semibold  text-xl">Loading activity...</div>;
   }
 
   if (!activeYear || filteredData.length === 0) {
@@ -128,7 +128,7 @@ export default function ActivityHeatmap() {
   }
 
   return (
-    <section className="bg-gray-200 rounded-bl-2xl rounded-br-2xl shadow p-6">
+    <section className="bg-gray-200 py-6">
       {/* HEADER */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
