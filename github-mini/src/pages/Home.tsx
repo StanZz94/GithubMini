@@ -128,18 +128,17 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center gap-8 mt-24">
+          <div className="flex justify-center gap-8 mt-12">
             {hasMore && (
               <button
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
-                className="w-48 cursor-pointer"
+                className="px-10 py-3 rounded-xl bg-gray-300 border-2 border-gray-300 
+                text-lg font-semibold cursor-pointer
+                hover:border-white hover:drop-shadow-[0_0_20px_#A4EBFF] 
+                transition disabled:opacity-50"
               >
-                <img
-                  src="/more.png"
-                  alt="More"
-                  className="w-full drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#A4EBFF] transition"
-                />
+                Load More
               </button>
             )}
 
@@ -149,13 +148,12 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="w-48 cursor-pointer"
+                className="px-10 py-3 rounded-xl bg-gray-300 border-2 border-gray-300 
+                text-lg font-semibold cursor-pointer
+                hover:border-white hover:drop-shadow-[0_0_20px_#FCECBD] 
+                transition"
               >
-                <img
-                  src="/less.png"
-                  alt="Less"
-                  className="w-full drop-shadow-[0_0_5px_#ffffff] hover:drop-shadow-[0_0_20px_#FCECBD] transition"
-                />
+                Show Less
               </button>
             )}
           </div>
