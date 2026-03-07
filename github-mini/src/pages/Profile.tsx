@@ -3,6 +3,7 @@ import { useUser } from "../hooks/useUser";
 import { useUserRepos } from "../hooks/useUserRepos";
 import ProfileAnalytics from "../components/profile/ProfileAnalytics";
 import ActivityHeatmap from "../components/profile/ActivityHeatmap";
+import UserRepos from "../components/profile/UserRepos";
 
 export default function Profile() {
   const { username } = useParams();
@@ -80,9 +81,10 @@ export default function Profile() {
               View on GitHub
             </a>
           </div>
-
         </div>
-        <div className="w-full h-0.5 bg-gray-500 my-4 "></div>
+
+        <div className="w-full h-0.5 bg-gray-500 my-4"></div>
+
         <ActivityHeatmap />
       </div>
 
@@ -99,10 +101,15 @@ export default function Profile() {
 
       {/* ANALYTICS */}
       {reposLoading && (
-        <div className="text-center text-gray-500">Loading analytics...</div>
+        <div className="text-center text-gray-500 mt-6">
+          Loading analytics...
+        </div>
       )}
 
       {repos && repos.length > 0 && <ProfileAnalytics repos={repos} />}
+
+      {/* REPOSITORIES */}
+      {repos && <UserRepos repos={repos} />}
     </div>
   );
 }
