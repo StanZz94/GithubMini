@@ -101,7 +101,7 @@ export default function Profile() {
 
       {/* ANALYTICS */}
       {reposLoading && (
-        <div className="text-center text-gray-500 mt-6">
+        <div className="text-center text-lg font-semibold text-gray-300 mt-12">
           Loading analytics...
         </div>
       )}
