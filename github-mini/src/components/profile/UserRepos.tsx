@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { GithubRepo } from "../../types/github";
 
 type Props = {
@@ -5,6 +6,10 @@ type Props = {
 };
 
 export default function UserRepos({ repos }: Props) {
+  const INITIAL_COUNT = 6;
+
+  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
+
   if (!repos || repos.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-8">
@@ -13,6 +18,16 @@ export default function UserRepos({ repos }: Props) {
     );
   }
 
+  const visibleRepos = repos.slice(0, visibleCount);
+
+  const showMore = () => {
+    setVisibleCount((prev) => Math.min(prev + 6, repos.length));
+  };
+
+  const showLess = () => {
+    setVisibleCount((prev) => Math.max(prev - 6, INITIAL_COUNT));
+  };
+
   return (
     <div className="mt-10">
       <h2 className="text-2xl font-semibold text-center mb-6">
@@ -20,7 +35,7 @@ export default function UserRepos({ repos }: Props) {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {repos.map((repo) => (
+        {visibleRepos.map((repo) => (
           <a
             key={repo.id}
             href={repo.html_url}
@@ -44,6 +59,27 @@ export default function UserRepos({ repos }: Props) {
             </div>
           </a>
         ))}
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-center gap-4 mt-6">
+        {visibleCount < repos.length && (
+          <button
+            onClick={showMore}
+            className="px-4 py-2 bg-black text-white rounded-lg hover:opacity-90"
+          >
+            Show More
+          </button>
+        )}
+
+        {visibleCount > INITIAL_COUNT && (
+          <button
+            onClick={showLess}
+            className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+          >
+            Show Less
+          </button>
+        )}
       </div>
     </div>
   );
