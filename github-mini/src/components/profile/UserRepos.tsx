@@ -13,7 +13,7 @@ export default function UserRepos({ repos }: Props) {
 
   if (!repos || repos.length === 0) {
     return (
-      <p className="text-center text-gray-500 mt-8">
+      <p className="text-center font-semibold text-lg text-gray-300 mt-8">
         No repositories found.
       </p>
     );
@@ -30,9 +30,9 @@ export default function UserRepos({ repos }: Props) {
   };
 
   return (
-    <div className="mt-10">
-      <h2 className="text-2xl font-semibold text-center mb-6">
-        Repositories
+    <div className="mt-20">
+      <h2 className="text-3xl text-gray-300 font-bold text-center mb-6">
+       Public Repositories
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -56,12 +56,12 @@ export default function UserRepos({ repos }: Props) {
             <div className="flex gap-4 mt-3 text-sm text-gray-600">
               {repo.language && (
                 <span className="flex items-center gap-1">
-                  <Circle size={14} /> {repo.language}
+                  <Circle size={14} color="#FFF200" fill="#FFF200" /> {repo.language}
                 </span>
               )}
 
               <span className="flex items-center gap-1">
-                <Star size={14} /> {repo.stargazers_count}
+                <Star size={14}  fill="#FFF200" /> {repo.stargazers_count}
               </span>
 
               <span className="flex items-center gap-1">
