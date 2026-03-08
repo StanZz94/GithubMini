@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { GithubRepo } from "../../types/github";
+import { Star, GitFork, Circle } from "lucide-react";
 
 type Props = {
   repos: GithubRepo[];
@@ -53,9 +54,19 @@ export default function UserRepos({ repos }: Props) {
             )}
 
             <div className="flex gap-4 mt-3 text-sm text-gray-600">
-              {repo.language && <span>🟡 {repo.language}</span>}
-              <span>⭐ {repo.stargazers_count}</span>
-              <span>🍴 {repo.forks_count}</span>
+              {repo.language && (
+                <span className="flex items-center gap-1">
+                  <Circle size={14} /> {repo.language}
+                </span>
+              )}
+
+              <span className="flex items-center gap-1">
+                <Star size={14} /> {repo.stargazers_count}
+              </span>
+
+              <span className="flex items-center gap-1">
+                <GitFork size={14} /> {repo.forks_count}
+              </span>
             </div>
           </a>
         ))}
