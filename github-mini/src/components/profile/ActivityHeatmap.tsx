@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useUserActivity } from "../../hooks/useUserActivity";
 import { useParams } from "react-router-dom";
-import { Flame, Zap } from "lucide-react";
+import { CalendarDays, Flame, Zap } from "lucide-react";
 
 export default function ActivityHeatmap() {
   const { username } = useParams();
@@ -135,7 +135,8 @@ export default function ActivityHeatmap() {
       {/* HEADER */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-stone-700">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-stone-700">
+            <CalendarDays strokeWidth={3} size={22} />
             Contribution Activity
           </h2>
           <p className="text-sm text-gray-500">
