@@ -58,7 +58,7 @@ export default function LanguagePieChart({ repos }: Props) {
         Languages Used
       </h3>
 
-      <div className="h-64">
+      <div className="h-68">
         <ResponsiveContainer>
           <PieChart>
             <Pie
