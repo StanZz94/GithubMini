@@ -86,7 +86,8 @@ export default function UserRepos({ repos }: Props) {
               )}
 
               <span className="flex items-center gap-1">
-                <Star size={14} fill="#facc15" stroke="#facc15" /> {repo.stargazers_count}
+                <Star size={14} fill="#facc15" stroke="#facc15" />{" "}
+                {repo.stargazers_count}
               </span>
 
               <span className="flex items-center gap-1">
@@ -98,11 +99,14 @@ export default function UserRepos({ repos }: Props) {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-center gap-4 mt-6">
+      <div className="flex justify-center gap-4 mt-12">
         {visibleCount < repos.length && (
           <button
             onClick={showMore}
-            className="px-4 py-2 bg-black text-white rounded-lg hover:opacity-90"
+            className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
+                text-lg font-semibold cursor-pointer
+                hover:border-white hover:drop-shadow-[0_0_20px_#A4EBFF] 
+                transition disabled:opacity-50"
           >
             Show More
           </button>
@@ -111,7 +115,10 @@ export default function UserRepos({ repos }: Props) {
         {visibleCount > INITIAL_COUNT && (
           <button
             onClick={showLess}
-            className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+            className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
+                text-lg font-semibold cursor-pointer
+                hover:border-white hover:drop-shadow-[0_0_20px_#FCECBD] 
+                transition"
           >
             Show Less
           </button>

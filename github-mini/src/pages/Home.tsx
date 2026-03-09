@@ -133,7 +133,7 @@ export default function Home() {
               <button
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
-                className="px-10 py-3 rounded-xl bg-gray-300 border-2 border-gray-300 
+                className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
                 text-lg font-semibold cursor-pointer
                 hover:border-white hover:drop-shadow-[0_0_20px_#A4EBFF] 
                 transition disabled:opacity-50"
@@ -148,7 +148,7 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="px-10 py-3 rounded-xl bg-gray-300 border-2 border-gray-300 
+                className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
                 text-lg font-semibold cursor-pointer
                 hover:border-white hover:drop-shadow-[0_0_20px_#FCECBD] 
                 transition"
