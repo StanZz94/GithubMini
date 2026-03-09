@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useUserActivity } from "../../hooks/useUserActivity";
 import { useParams } from "react-router-dom";
+import { Flame, Zap } from "lucide-react";
 
 export default function ActivityHeatmap() {
   const { username } = useParams();
@@ -53,12 +54,12 @@ export default function ActivityHeatmap() {
 
     return {
       longestStreak: longest,
-      currentStreak: current, // (kept but not used for UI)
+      currentStreak: current,
       totalContributions: total,
     };
   }, [filteredData]);
 
-  // ================= GLOBAL CURRENT STREAK (FIX) =================
+  // ================= GLOBAL CURRENT STREAK =================
 
   const globalCurrentStreak = useMemo(() => {
     if (!data.length) return 0;
@@ -80,10 +81,8 @@ export default function ActivityHeatmap() {
     const todayKey = formatDate(today);
     const todayCount = activityMap.get(todayKey) ?? 0;
 
-    // 🎯 Bonus if today has contributions
     const bonus = todayCount > 0 ? 1 : 0;
 
-    // Start checking from yesterday ONLY
     const currentDate = new Date(today);
     currentDate.setDate(currentDate.getDate() - 1);
 
@@ -120,7 +119,11 @@ export default function ActivityHeatmap() {
   // ================= LOADING =================
 
   if (isLoading) {
-    return <div className="text-center text-gray-600 p-4 font-semibold  text-xl">Loading activity...</div>;
+    return (
+      <div className="text-center text-gray-600 p-4 font-semibold text-xl">
+        Loading activity...
+      </div>
+    );
   }
 
   if (!activeYear || filteredData.length === 0) {
@@ -173,10 +176,15 @@ export default function ActivityHeatmap() {
 
       {/* STREAK INFO */}
       <div className="flex justify-between text-base text-gray-600">
-        <span>
-          🔥 {activeYear} Longest streak: {stats.longestStreak} days
+        <span className="flex items-center gap-1">
+          <Flame size={16} className="text-orange-500" fill="#FFAC1D" />
+          {activeYear} Longest streak: {stats.longestStreak} days
         </span>
-        <span>⚡ Current streak: {globalCurrentStreak} days</span>
+
+        <span className="flex items-center gap-1">
+          <Zap size={16} className="text-yellow-500" fill="#FFFD55" />
+          Current streak: {globalCurrentStreak} days
+        </span>
       </div>
     </section>
   );
