@@ -4,6 +4,7 @@ import { useUserRepos } from "../hooks/useUserRepos";
 import ProfileAnalytics from "../components/profile/ProfileAnalytics";
 import ActivityHeatmap from "../components/profile/ActivityHeatmap";
 import UserRepos from "../components/profile/UserRepos";
+import { MapPin, Building2, Link, Github } from "lucide-react";
 
 export default function Profile() {
   const { username } = useParams();
@@ -54,8 +55,18 @@ export default function Profile() {
             {user.bio && <p className="text-gray-700">{user.bio}</p>}
 
             <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm text-gray-600">
-              {user.location && <span>📍 {user.location}</span>}
-              {user.company && <span>🏢 {user.company}</span>}
+              {user.location && (
+                <span className="flex items-center gap-1">
+                  <MapPin size={16} /> {user.location}
+                </span>
+              )}
+
+              {user.company && (
+                <span className="flex items-center gap-1">
+                  <Building2 size={16} /> {user.company}
+                </span>
+              )}
+
               {user.blog && (
                 <a
                   href={
@@ -65,9 +76,10 @@ export default function Profile() {
                   }
                   target="_blank"
                   rel="noreferrer"
-                  className="hover:underline"
+                  className="hover:underline flex items-center gap-1"
                 >
-                  🔗 Website
+                  <Link size={16} />
+                  Website
                 </a>
               )}
             </div>
@@ -76,8 +88,9 @@ export default function Profile() {
               href={`https://github.com/${user.login}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-block mt-3 px-5 py-2 bg-black text-white rounded-lg text-sm hover:opacity-90 transition hover:underline"
+              className="inline-flex items-center gap-2 mt-3 px-5 py-2 bg-black text-white rounded-lg text-sm hover:opacity-90 transition hover:underline"
             >
+              <Github size={16} />
               View on GitHub
             </a>
           </div>
