@@ -7,6 +7,28 @@ type Props = {
 };
 
 export default function UserRepos({ repos }: Props) {
+  const languageColors: Record<string, string> = {
+    JavaScript: "#f1e05a",
+    TypeScript: "#3178c6",
+    Python: "#3572A5",
+    Java: "#b07219",
+    C: "#555555",
+    "C++": "#f34b7d",
+    "C#": "#178600",
+    Go: "#00ADD8",
+    Rust: "#dea584",
+    PHP: "#4F5D95",
+    Ruby: "#701516",
+    Swift: "#ffac45",
+    Kotlin: "#A97BFF",
+    Dart: "#00B4AB",
+    HTML: "#e34c26",
+    CSS: "#563d7c",
+    Shell: "#89e051",
+    Vue: "#41b883",
+    Svelte: "#ff3e00",
+  };
+
   const INITIAL_COUNT = 6;
 
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
@@ -30,9 +52,9 @@ export default function UserRepos({ repos }: Props) {
   };
 
   return (
-    <div className="mt-20">
-      <h2 className="text-3xl text-gray-300 font-bold text-center mb-6">
-       Public Repositories
+    <div className="mt-28">
+      <h2 className="text-4xl text-gray-300 font-bold text-center mb-6">
+        Public Repositories
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -48,20 +70,23 @@ export default function UserRepos({ repos }: Props) {
             <h3 className="font-semibold text-lg">{repo.name}</h3>
 
             {repo.description && (
-              <p className="text-sm text-gray-600 mt-1">
-                {repo.description}
-              </p>
+              <p className="text-sm text-gray-600 mt-1">{repo.description}</p>
             )}
 
             <div className="flex gap-4 mt-3 text-sm text-gray-600">
               {repo.language && (
                 <span className="flex items-center gap-1">
-                  <Circle size={14} color="#FFF200" fill="#FFF200" /> {repo.language}
+                  <Circle
+                    size={14}
+                    fill={languageColors[repo.language] || "#9ca3af"}
+                    color={languageColors[repo.language] || "#9ca3af"}
+                  />{" "}
+                  {repo.language}
                 </span>
               )}
 
               <span className="flex items-center gap-1">
-                <Star size={14}  fill="#FFF200" /> {repo.stargazers_count}
+                <Star size={14} fill="#facc15" stroke="#facc15" /> {repo.stargazers_count}
               </span>
 
               <span className="flex items-center gap-1">
