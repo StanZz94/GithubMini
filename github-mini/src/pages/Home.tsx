@@ -46,9 +46,9 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-6 px-4">
+    <div className="max-w-7xl mx-auto py-2 md:py-6 px-0 md:px-4">
       {/* Illustration */}
-      <div className="w-80 mx-auto mb-6 mt-4">
+      <div className="w-48 sm:w-64 md:w-80 mx-auto mb-6 mt-4">
         <img
           src="/octocat.png"
           alt="Search Illustration"
@@ -56,18 +56,18 @@ export default function Home() {
         />
       </div>
 
-      <p className="text-2xl text-center text-gray-300 mb-4">
+      <p className="text-xl md:text-2xl text-center text-gray-300 mb-4">
         Search for GitHub users and explore their statistics.
       </p>
 
       {/* Search Input */}
-      <div className="max-w-2xl mx-auto relative mb-10">
+      <div className="max-w-lg md:max-w-2xl mx-auto relative mb-10">
         <input
           type="text"
           placeholder="Search GitHub username..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-3 pr-12 rounded-lg bg-gray-300 
+          className="w-full px-4 py-2 md:py-3 pr-12 rounded-lg bg-gray-300 
           focus:outline-none focus:ring-2 focus:ring-white 
           focus:drop-shadow-[0_0_10px_#ffffff]"
         />
@@ -100,11 +100,11 @@ export default function Home() {
       {/* Results */}
       {users.length > 0 && (
         <>
-          <h1 className="text-3xl text-center font-semibold text-gray-200 mb-6">
+          <h1 className="text-2xl md:text-3xl text-center font-semibold text-gray-200 mb-6">
             Search Results
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 md:px-0">
             {users.map((user) => (
               <div
                 key={user.id}
@@ -128,13 +128,13 @@ export default function Home() {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-center gap-8 mt-12">
+          <div className="flex justify-center gap-8 mt-8 md:mt-12">
             {hasMore && (
               <button
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
-                className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
-                text-lg font-semibold cursor-pointer
+                className="px-4 md:px-10 py-1 md:py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
+                md:text-lg font-semibold cursor-pointer
                 hover:border-white hover:drop-shadow-[0_0_20px_#A4EBFF] 
                 transition disabled:opacity-50"
               >
@@ -148,8 +148,8 @@ export default function Home() {
                   setPage(1);
                   setUsers([]);
                 }}
-                className="px-10 py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
-                text-lg font-semibold cursor-pointer
+                className="px-4 md:px-10 py-1 md:py-2 rounded-xl bg-gray-300 border-2 border-gray-300 
+                md:text-lg font-semibold cursor-pointer
                 hover:border-white hover:drop-shadow-[0_0_20px_#FCECBD] 
                 transition"
               >
