@@ -8,14 +8,18 @@ export default function Navbar() {
   return (
     <header className="border-b-2 bg-stone-800">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        
         {/* LEFT SIDE */}
         <div className="flex items-center">
           <img
             src="/gitlogo.png"
             alt="GitHub Mini Logo"
-            className="w-12 h-12 md:w-18 md:h-18 inline-block mr-2 drop-shadow-[0_0_20px_#ffffff]"
+            className="w-13 h-13 md:w-18 md:h-18 inline-block mr-1 drop-shadow-[0_0_20px_#ffffff]"
           />
+          <h1 className="md:hidden text-lg pb-2 font-extrabold leading-4 text-gray-400 text-center font-serif">
+            Developer
+            <br />
+            Analytics
+          </h1>
         </div>
 
         {/* TITLE */}
@@ -36,9 +40,6 @@ export default function Navbar() {
           )}
         </nav>
       </div>
-      <h1 className="md:hidden text-base pb-2 font-extrabold text-gray-400 text-center font-serif">
-          GitHub Developer Analytics
-        </h1>
     </header>
   );
 }
