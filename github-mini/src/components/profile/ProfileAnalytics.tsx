@@ -12,8 +12,8 @@ export default function ProfileAnalytics({ repos }: Props) {
   if (!repos.length) return null;
 
   return (
-    <section className="space-y-10 mt-20">
-      <h2 className="text-4xl font-bold text-center text-gray-300">
+    <section className="space-y-6 md:space-y-10 mt-20">
+      <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-300">
         Developer Analytics
       </h2>
 
