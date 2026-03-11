@@ -131,26 +131,27 @@ export default function ActivityHeatmap() {
   }
 
   return (
-    <section className="bg-gray-200 py-6">
+    <section className="bg-gray-200 py-2 md:py-6">
       {/* HEADER */}
       <div className="flex justify-between items-center flex-wrap gap-4">
         <div>
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-stone-700">
-            <CalendarDays strokeWidth={3} size={22} />
+          <h2 className="flex items-center gap-2 text-xl md:text-2xl font-bold text-stone-700">
+            <CalendarDays strokeWidth={3} size={22} className="hidden md:block" />
+            <CalendarDays strokeWidth={3} size={16} className=" md:hidden" />
             Contribution Activity
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs md:text-sm text-gray-500">
             {stats.totalContributions} contributions in {activeYear}
           </p>
         </div>
 
         {/* YEAR SELECTOR */}
-        <div className="flex gap-2 flex-wrap flex-row-reverse">
+        <div className="flex gap-1 md:gap-2 flex-wrap flex-row-reverse">
           {years.map((year) => (
             <button
               key={year}
               onClick={() => setSelectedYear(year)}
-              className={`px-3 py-1 text-sm font-semibold border border-transparent rounded-lg transition hover:underline ${
+              className={`px-3 py-1 text-xs sm:text-sm font-semibold border border-transparent rounded-lg transition hover:underline ${
                 activeYear === year
                   ? "bg-black text-white "
                   : "bg-gray-200 hover:bg-gray-300 hover:border-black"
@@ -176,7 +177,7 @@ export default function ActivityHeatmap() {
       </div>
 
       {/* STREAK INFO */}
-      <div className="flex justify-between text-base text-gray-600">
+      <div className="flex flex-col md:flex-row gap-2 md:justify-between text-sm md:text-base text-gray-600 mb-2 md:mb-0">
         <span className="flex items-center gap-1">
           <Flame size={16} className="text-orange-500" fill="#FFAC1D" />
           {activeYear} Longest streak: {stats.longestStreak} days
