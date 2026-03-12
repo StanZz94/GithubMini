@@ -53,8 +53,8 @@ export default function UserRepos({ repos }: Props) {
 
   return (
     <div className="mt-28">
-      <h2 className="text-4xl text-gray-300 font-bold text-center mb-6">
-        Public Repositories
+      <h2 className="text-3xl md:text-4xl text-gray-300 font-bold text-center mb-6">
+        Public <br/>Repositories
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -64,7 +64,7 @@ export default function UserRepos({ repos }: Props) {
             href={repo.html_url}
             target="_blank"
             rel="noreferrer"
-            className="bg-gray-200 p-4 rounded-xl border-2 border-gray-200
+            className="bg-gray-200 py-2 px-4 md:py-4 rounded-xl border-2 border-gray-200
             hover:border-gray-400 hover:shadow-lg transition"
           >
             <h3 className="font-semibold text-lg">{repo.name}</h3>
