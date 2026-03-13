@@ -23,7 +23,6 @@ export default function StarsBarChart({ repos }: Props) {
       stars: repo.stargazers_count,
     }));
 
-  // 🔥 Check if all stars are 0
   const allZero = topRepos.every((repo) => repo.stars === 0);
 
   if (allZero) {
@@ -49,18 +48,38 @@ export default function StarsBarChart({ repos }: Props) {
   }
 
   return (
-    <div className="bg-gray-200 px-6 py-4 rounded-2xl shadow">
-      <h3 className="text-2xl text-stone-700 font-semibold mb-4 text-center">
+    <div className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow">
+      <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Top Starred Repositories
       </h3>
 
-      <div className="h-68 w-full">
-        <ResponsiveContainer>
-          <BarChart data={topRepos}>
+      <div className="w-full h-65 md:h-70">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={topRepos}
+            margin={{
+              top: 10,
+              right: 10,
+              left: 5,
+              bottom: 0,
+            }}
+          >
             <XAxis dataKey="name" hide />
-            <YAxis />
+
+            <YAxis
+              width="auto"
+              tick={{ fontSize: 12 }}
+              allowDecimals={false}
+            />
+
             <Tooltip />
-            <Bar dataKey="stars" fill="#f59e0b" />
+
+            <Bar
+              dataKey="stars"
+              fill="#f59e0b"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={50}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
