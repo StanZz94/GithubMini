@@ -7,13 +7,65 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
   repos: GithubRepo[];
 }
 
+// ================= CUSTOM TOOLTIP =================
+interface CustomTooltipProps {
+  active?: boolean;
+  // eslint-disable-next-line
+  payload?: any;
+  label?: string;
+  coordinate?: { x: number; y: number };
+}
+
+function CustomTooltip({ active, payload, label, coordinate }: CustomTooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  return (
+    <div
+      className="bg-white border p-2 rounded shadow text-sm"
+      style={{
+        position: "absolute",
+        left: coordinate?.x,
+        top: coordinate?.y,
+        pointerEvents: "none",
+        transform: "translate(-50%, -100%)",
+        whiteSpace: "nowrap",
+        zIndex: 1000,
+      }}
+    >
+      
+      <p className="font-semibold">{label}</p>
+    {/* eslint-disable-next-line */}
+      {payload.map((item: any) => (
+        <p key={item.dataKey} className="text-gray-700">
+          {item.name}: {item.value}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 export default function PopularityComparisonChart({ repos }: Props) {
+  const [tooltipActive, setTooltipActive] = useState(false);
+  const [tooltipCoord, setTooltipCoord] = useState<{ x: number; y: number } | undefined>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    // eslint-disable-next-line
+    setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!repos.length) return null;
 
   const data = repos
@@ -50,8 +102,29 @@ export default function PopularityComparisonChart({ repos }: Props) {
     );
   }
 
+  // ================= TOUCH HANDLERS =================
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+    const touch = e.touches[0];
+    setTooltipCoord({ x: touch.clientX, y: touch.clientY - 20 });
+    setTooltipActive(true);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return;
+    timeoutRef.current = setTimeout(() => {
+      setTooltipActive(false);
+    }, 1000);
+  };
+
   return (
-    <div className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow">
+    <div
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative"
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Stars vs Forks (Top Repos)
       </h3>
@@ -68,30 +141,15 @@ export default function PopularityComparisonChart({ repos }: Props) {
             }}
           >
             <XAxis dataKey="name" hide />
-
-            <YAxis
-              width="auto"
-              tick={{ fontSize: 12 }}
-              allowDecimals={false}
+            <YAxis width="auto" tick={{ fontSize: 12 }} allowDecimals={false} />
+            <Tooltip
+              content={isMobile ? <CustomTooltip coordinate={tooltipCoord} /> : undefined}
+              cursor={false}
+              active={isMobile ? tooltipActive : undefined}
             />
-
-            <Tooltip />
-
             <Legend />
-
-            <Bar
-              dataKey="stars"
-              fill="#f59e0b"
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
-            />
-
-            <Bar
-              dataKey="forks"
-              fill="#10b981"
-              radius={[6, 6, 0, 0]}
-              maxBarSize={40}
-            />
+            <Bar dataKey="stars" fill="#f59e0b" radius={[6, 6, 0, 0]} maxBarSize={40} />
+            <Bar dataKey="forks" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={40} />
           </BarChart>
         </ResponsiveContainer>
       </div>
