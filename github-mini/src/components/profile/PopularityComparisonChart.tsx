@@ -127,7 +127,7 @@ export default function PopularityComparisonChart({ repos }: Props) {
 
     timeoutRef.current = setTimeout(() => {
       setTooltipActive(false);
-    }, 1000);
+    }, 350);
   };
 
   return (

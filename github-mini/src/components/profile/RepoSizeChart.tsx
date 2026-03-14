@@ -6,14 +6,74 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
   repos: GithubRepo[];
 }
 
+// ================= CUSTOM TOOLTIP =================
+interface CustomTooltipProps {
+  active?: boolean;
+  // eslint-disable-next-line
+  payload?: any;
+  label?: string;
+  coordinate?: { x: number; y: number };
+}
+
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  coordinate,
+}: CustomTooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  return (
+    <div
+      className="bg-white border p-2 rounded shadow text-sm"
+      style={{
+        position: "absolute",
+        left: coordinate?.x,
+        top: coordinate?.y,
+        pointerEvents: "none",
+        transform: "translate(-50%, -100%)",
+        whiteSpace: "nowrap",
+        zIndex: 1000,
+      }}
+    >
+      <p className="font-semibold">{label}</p>
+      {/* eslint-disable-next-line */}
+      {payload.map((item: any) => (
+        <p key={item.dataKey} className="text-gray-700">
+          {item.name}: {item.value} KB
+        </p>
+      ))}
+    </div>
+  );
+}
+
 export default function RepoSizeChart({ repos }: Props) {
   const hasRepos = repos.length > 0;
+
+  const [tooltipActive, setTooltipActive] = useState(false);
+  const [tooltipCoord, setTooltipCoord] = useState<
+    { x: number; y: number } | undefined
+  >();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // ================= MOBILE DETECTION =================
+  useEffect(() => {
+    // eslint-disable-next-line
+    setIsMobile(window.innerWidth <= 768);
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const data = hasRepos
     ? repos
@@ -22,7 +82,7 @@ export default function RepoSizeChart({ repos }: Props) {
         .slice(0, 10)
         .map((repo) => ({
           name: repo.name,
-          size: repo.size, // KB
+          size: repo.size,
         }))
     : [];
 
@@ -44,8 +104,40 @@ export default function RepoSizeChart({ repos }: Props) {
     );
   }
 
+  // ================= TOUCH HANDLERS =================
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+
+    const touch = e.touches[0];
+
+    setTooltipCoord({
+      x: touch.clientX,
+      y: touch.clientY - 20,
+    });
+
+    setTooltipActive(true);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return;
+
+    timeoutRef.current = setTimeout(() => {
+      setTooltipActive(false);
+    }, 350);
+  };
+
   return (
-    <div className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow">
+    <div
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none focus:outline-none"
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "none",
+      }}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-12 text-center">
         Repository Size (Top 10)
       </h3>
@@ -63,13 +155,17 @@ export default function RepoSizeChart({ repos }: Props) {
           >
             <XAxis dataKey="name" hide />
 
-            <YAxis
-              width="auto"
-              tick={{ fontSize: 12 }}
-              allowDecimals={false}
-            />
+            <YAxis width="auto" tick={{ fontSize: 12 }} allowDecimals={false} />
 
-            <Tooltip />
+            <Tooltip
+              content={
+                isMobile ? (
+                  <CustomTooltip coordinate={tooltipCoord} />
+                ) : undefined
+              }
+              cursor={false}
+              active={isMobile ? tooltipActive : undefined}
+            />
 
             <Bar
               dataKey="size"
