@@ -39,10 +39,10 @@ function CustomTooltip({ active, payload, label, coordinate }: CustomTooltipProp
         zIndex: 1000,
       }}
     >
-      
       <p className="font-semibold">{label}</p>
-    {/* eslint-disable-next-line */}
+      {/* eslint-disable-next-line */}
       {payload.map((item: any) => (
+        
         <p key={item.dataKey} className="text-gray-700">
           {item.name}: {item.value}
         </p>
@@ -53,15 +53,19 @@ function CustomTooltip({ active, payload, label, coordinate }: CustomTooltipProp
 
 export default function PopularityComparisonChart({ repos }: Props) {
   const [tooltipActive, setTooltipActive] = useState(false);
-  const [tooltipCoord, setTooltipCoord] = useState<{ x: number; y: number } | undefined>();
+  const [tooltipCoord, setTooltipCoord] = useState<
+    { x: number; y: number } | undefined
+  >();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile
+  // ================= MOBILE DETECTION =================
   useEffect(() => {
     // eslint-disable-next-line
     setIsMobile(window.innerWidth <= 768);
+
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -105,8 +109,14 @@ export default function PopularityComparisonChart({ repos }: Props) {
   // ================= TOUCH HANDLERS =================
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isMobile) return;
+
     const touch = e.touches[0];
-    setTooltipCoord({ x: touch.clientX, y: touch.clientY - 20 });
+
+    setTooltipCoord({
+      x: touch.clientX,
+      y: touch.clientY - 20,
+    });
+
     setTooltipActive(true);
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -114,6 +124,7 @@ export default function PopularityComparisonChart({ repos }: Props) {
 
   const handleTouchEnd = () => {
     if (!isMobile) return;
+
     timeoutRef.current = setTimeout(() => {
       setTooltipActive(false);
     }, 1000);
@@ -121,7 +132,11 @@ export default function PopularityComparisonChart({ repos }: Props) {
 
   return (
     <div
-      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative"
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none focus:outline-none"
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "none",
+      }}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
@@ -141,15 +156,38 @@ export default function PopularityComparisonChart({ repos }: Props) {
             }}
           >
             <XAxis dataKey="name" hide />
-            <YAxis width="auto" tick={{ fontSize: 12 }} allowDecimals={false} />
+
+            <YAxis
+              width="auto"
+              tick={{ fontSize: 12 }}
+              allowDecimals={false}
+            />
+
             <Tooltip
-              content={isMobile ? <CustomTooltip coordinate={tooltipCoord} /> : undefined}
+              content={
+                isMobile ? (
+                  <CustomTooltip coordinate={tooltipCoord} />
+                ) : undefined
+              }
               cursor={false}
               active={isMobile ? tooltipActive : undefined}
             />
+
             <Legend />
-            <Bar dataKey="stars" fill="#f59e0b" radius={[6, 6, 0, 0]} maxBarSize={40} />
-            <Bar dataKey="forks" fill="#10b981" radius={[6, 6, 0, 0]} maxBarSize={40} />
+
+            <Bar
+              dataKey="stars"
+              fill="#f59e0b"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
+            />
+
+            <Bar
+              dataKey="forks"
+              fill="#10b981"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
