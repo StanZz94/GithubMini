@@ -5,7 +5,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
@@ -29,7 +29,6 @@ function CustomTooltip({ active, payload }: any) {
 
 export default function LanguagePieChart({ repos }: Props) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [tooltipVisible, setTooltipVisible] = useState(true);
 
   if (!repos.length) return null;
 
@@ -69,26 +68,29 @@ export default function LanguagePieChart({ repos }: Props) {
     );
   }
 
-  /* ================= TOUCH CONTROL ================= */
+  /* ================= MOBILE TOOLTIP DELAY ================= */
 
-  const handleInteraction = () => {
-    setTooltipVisible(true);
-
+  const handleTouchStart = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const handleTouchEnd = () => {
     timeoutRef.current = setTimeout(() => {
-      setTooltipVisible(false);
-    }, 350);
+      const tooltip = document.querySelector(
+        ".recharts-tooltip-wrapper"
+      ) as HTMLElement | null;
+
+      if (tooltip) {
+        tooltip.style.opacity = "0";
+      }
+    }, 1000);
   };
 
   return (
     <div
       className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow"
       style={{ WebkitTapHighlightColor: "transparent" }}
-      onTouchStart={handleInteraction}
-      onTouchMove={handleInteraction}
+      onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
@@ -103,19 +105,22 @@ export default function LanguagePieChart({ repos }: Props) {
               dataKey="value"
               nameKey="name"
               outerRadius={100}
-              label
+              isAnimationActive={false}
             >
               {data.map((_, index) => (
                 <Cell
                   key={index}
                   fill={`hsl(${index * 60}, 70%, 50%)`}
+                  style={{ outline: "none" }}
                 />
               ))}
             </Pie>
 
-            {tooltipVisible && (
-              <Tooltip content={<CustomTooltip />} />
-            )}
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={false}
+              wrapperStyle={{ outline: "none" }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>
