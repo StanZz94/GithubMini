@@ -5,22 +5,39 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
   repos: GithubRepo[];
 }
 
-/* ================= CUSTOM TOOLTIP ================= */
-// eslint-disable-next-line
-function CustomTooltip({ active, payload }: any) {
+// ================= CUSTOM TOOLTIP =================
+interface CustomTooltipProps {
+  active?: boolean;
+  // eslint-disable-next-line
+  payload?: any;
+  coordinate?: { x: number; y: number };
+}
+
+function CustomTooltip({ active, payload, coordinate }: CustomTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
 
-  const data = payload[0].payload;
+  const data = payload[0]?.payload;
 
   return (
-    <div className="bg-white border p-2 rounded shadow text-sm">
+    <div
+      className="bg-white border p-2 rounded shadow text-sm"
+      style={{
+        position: "absolute",
+        left: coordinate?.x,
+        top: coordinate?.y,
+        pointerEvents: "none",
+        transform: "translate(-50%, -100%)",
+        whiteSpace: "nowrap",
+        zIndex: 1000,
+      }}
+    >
       <p className="font-semibold">{data.name}</p>
       <p className="text-gray-700">Repos: {data.value}</p>
     </div>
@@ -28,7 +45,23 @@ function CustomTooltip({ active, payload }: any) {
 }
 
 export default function LanguagePieChart({ repos }: Props) {
+  const [tooltipActive, setTooltipActive] = useState(false);
+  const [tooltipCoord, setTooltipCoord] =
+    useState<{ x: number; y: number } | undefined>();
+
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // ================= MOBILE DETECTION =================
+  useEffect(() => {
+    {/* eslint-disable-next-line */}
+    setIsMobile(window.innerWidth <= 768);
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (!repos.length) return null;
 
@@ -68,36 +101,45 @@ export default function LanguagePieChart({ repos }: Props) {
     );
   }
 
-  /* ================= MOBILE TOOLTIP DELAY ================= */
+  // ================= TOUCH HANDLERS =================
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
 
-  const handleTouchStart = () => {
+    const touch = e.touches[0];
+
+    setTooltipCoord({
+      x: touch.clientX,
+      y: touch.clientY - 20,
+    });
+
+    setTooltipActive(true);
+
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const handleTouchEnd = () => {
-    timeoutRef.current = setTimeout(() => {
-      const tooltip = document.querySelector(
-        ".recharts-tooltip-wrapper"
-      ) as HTMLElement | null;
+    if (!isMobile) return;
 
-      if (tooltip) {
-        tooltip.style.opacity = "0";
-      }
-    }, 1000);
+    timeoutRef.current = setTimeout(() => {
+      setTooltipActive(false);
+    }, 350);
   };
 
   return (
     <div
-      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow"
-      style={{ WebkitTapHighlightColor: "transparent" }}
-      onTouchStart={handleTouchStart}
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none focus:outline-none"
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "none",
+      }}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Languages Used
       </h3>
 
-      <div className="h-68 md:h-72">
+      <div className="h-68">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -105,21 +147,24 @@ export default function LanguagePieChart({ repos }: Props) {
               dataKey="value"
               nameKey="name"
               outerRadius={100}
-              isAnimationActive={false}
+              label
             >
               {data.map((_, index) => (
                 <Cell
                   key={index}
                   fill={`hsl(${index * 60}, 70%, 50%)`}
-                  style={{ outline: "none" }}
                 />
               ))}
             </Pie>
 
             <Tooltip
-              content={<CustomTooltip />}
+              content={
+                isMobile ? (
+                  <CustomTooltip coordinate={tooltipCoord} />
+                ) : undefined
+              }
               cursor={false}
-              wrapperStyle={{ outline: "none" }}
+              active={isMobile ? tooltipActive : undefined}
             />
           </PieChart>
         </ResponsiveContainer>

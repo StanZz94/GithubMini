@@ -1,8 +1,10 @@
 import {
-  PieChart,
-  Pie,
-  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
   Tooltip,
+  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { useState, useRef, useEffect } from "react";
@@ -17,13 +19,12 @@ interface CustomTooltipProps {
   active?: boolean;
   // eslint-disable-next-line
   payload?: any;
+  label?: string;
   coordinate?: { x: number; y: number };
 }
 
-function CustomTooltip({ active, payload, coordinate }: CustomTooltipProps) {
+function CustomTooltip({ active, payload, label, coordinate }: CustomTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
-
-  const data = payload[0]?.payload;
 
   return (
     <div
@@ -38,23 +39,29 @@ function CustomTooltip({ active, payload, coordinate }: CustomTooltipProps) {
         zIndex: 1000,
       }}
     >
-      <p className="font-semibold">{data.name}</p>
-      <p className="text-gray-700">Repos: {data.value}</p>
+      <p className="font-semibold">{label}</p>
+      {/* eslint-disable-next-line */}
+      {payload.map((item: any) => (
+        
+        <p key={item.dataKey} className="text-gray-700">
+          {item.name}: {item.value}
+        </p>
+      ))}
     </div>
   );
 }
 
-export default function LanguagePieChart({ repos }: Props) {
+export default function PopularityComparisonChart({ repos }: Props) {
   const [tooltipActive, setTooltipActive] = useState(false);
-  const [tooltipCoord, setTooltipCoord] =
-    useState<{ x: number; y: number } | undefined>();
-
+  const [tooltipCoord, setTooltipCoord] = useState<
+    { x: number; y: number } | undefined
+  >();
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   // ================= MOBILE DETECTION =================
   useEffect(() => {
-    {/* eslint-disable-next-line */}
+    // eslint-disable-next-line
     setIsMobile(window.innerWidth <= 768);
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -65,25 +72,23 @@ export default function LanguagePieChart({ repos }: Props) {
 
   if (!repos.length) return null;
 
-  const languageMap: Record<string, number> = {};
+  const data = repos
+    .slice()
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 8)
+    .map((repo) => ({
+      name: repo.name,
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+    }));
 
-  repos.forEach((repo) => {
-    if (!repo.language) return;
+  const allZero = data.every((repo) => repo.stars === 0 && repo.forks === 0);
 
-    languageMap[repo.language] =
-      (languageMap[repo.language] || 0) + 1;
-  });
-
-  const data = Object.entries(languageMap).map(([name, value]) => ({
-    name,
-    value,
-  }));
-
-  if (data.length === 0) {
+  if (allZero) {
     return (
       <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
         <h3 className="text-2xl text-stone-700 font-semibold mb-12">
-          Languages Used
+          Stars vs Forks (Top Repos)
         </h3>
 
         <div className="w-40 h-auto mx-auto">
@@ -95,7 +100,7 @@ export default function LanguagePieChart({ repos }: Props) {
         </div>
 
         <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
-          No language data available!
+          No stars or forks yet!
         </p>
       </div>
     );
@@ -136,26 +141,27 @@ export default function LanguagePieChart({ repos }: Props) {
       onTouchEnd={handleTouchEnd}
     >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
-        Languages Used
+        Stars vs Forks (Top Repos)
       </h3>
 
-      <div className="h-68">
+      <div className="w-full h-64 md:h-70">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={100}
-              label
-            >
-              {data.map((_, index) => (
-                <Cell
-                  key={index}
-                  fill={`hsl(${index * 60}, 70%, 50%)`}
-                />
-              ))}
-            </Pie>
+          <BarChart
+            data={data}
+            margin={{
+              top: 10,
+              right: 10,
+              left: 5,
+              bottom: 0,
+            }}
+          >
+            <XAxis dataKey="name" hide />
+
+            <YAxis
+              width="auto"
+              tick={{ fontSize: 12 }}
+              allowDecimals={false}
+            />
 
             <Tooltip
               content={
@@ -166,7 +172,23 @@ export default function LanguagePieChart({ repos }: Props) {
               cursor={false}
               active={isMobile ? tooltipActive : undefined}
             />
-          </PieChart>
+
+            <Legend />
+
+            <Bar
+              dataKey="stars"
+              fill="#f59e0b"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
+            />
+
+            <Bar
+              dataKey="forks"
+              fill="#10b981"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
+            />
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
