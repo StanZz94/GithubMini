@@ -6,13 +6,69 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
   repos: GithubRepo[];
 }
 
+/* ================= CUSTOM TOOLTIP ================= */
+
+interface CustomTooltipProps {
+  active?: boolean;
+  // eslint-disable-next-line
+  payload?: any;
+  label?: string;
+  coordinate?: { x: number; y: number };
+}
+
+function CustomTooltip({ active, payload, label, coordinate }: CustomTooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  return (
+    <div
+      className="bg-white border p-2 rounded shadow text-sm"
+      style={{
+        position: "absolute",
+        left: coordinate?.x,
+        top: coordinate?.y,
+        pointerEvents: "none",
+        transform: "translate(-50%, -100%)",
+        whiteSpace: "nowrap",
+        zIndex: 1000,
+      }}
+    >
+      <p className="font-semibold">{label}</p>
+      {/* eslint-disable-next-line */}
+      {payload.map((item: any) => (
+        <p key={item.dataKey} className="text-gray-700">
+          Stars: {item.value}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 export default function StarsBarChart({ repos }: Props) {
+  const [tooltipActive, setTooltipActive] = useState(false);
+  const [tooltipCoord, setTooltipCoord] =
+    useState<{ x: number; y: number }>();
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  /* ================= MOBILE DETECT ================= */
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+
+    check();
+    window.addEventListener("resize", check);
+
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   if (!repos.length) return null;
 
   const topRepos = [...repos]
@@ -47,8 +103,41 @@ export default function StarsBarChart({ repos }: Props) {
     );
   }
 
+  /* ================= TOUCH HANDLERS ================= */
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isMobile) return;
+
+    const touch = e.touches[0];
+
+    setTooltipCoord({
+      x: touch.clientX,
+      y: touch.clientY - 20,
+    });
+
+    setTooltipActive(true);
+
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isMobile) return;
+
+    timeoutRef.current = setTimeout(() => {
+      setTooltipActive(false);
+    }, 350);
+  };
+
   return (
-    <div className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow">
+    <div
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none"
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        touchAction: "manipulation",
+      }}
+    >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Top Starred Repositories
       </h3>
@@ -72,7 +161,15 @@ export default function StarsBarChart({ repos }: Props) {
               allowDecimals={false}
             />
 
-            <Tooltip />
+            <Tooltip
+              cursor={false}
+              content={
+                isMobile ? (
+                  <CustomTooltip coordinate={tooltipCoord} />
+                ) : undefined
+              }
+              active={isMobile ? tooltipActive : undefined}
+            />
 
             <Bar
               dataKey="stars"
