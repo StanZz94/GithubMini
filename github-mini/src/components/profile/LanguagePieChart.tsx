@@ -18,13 +18,18 @@ interface CustomTooltipProps {
   active?: boolean;
   // eslint-disable-next-line
   payload?: any;
+  label?: string;
   coordinate?: { x: number; y: number };
 }
 
-function CustomTooltip({ active, payload, coordinate }: CustomTooltipProps) {
+function CustomTooltip({
+  active,
+  payload,
+  coordinate,
+}: CustomTooltipProps) {
   if (!active || !payload || payload.length === 0) return null;
 
-  const data = payload[0].payload;
+  const data = payload[0]?.payload;
 
   return (
     <div
@@ -70,18 +75,21 @@ export default function LanguagePieChart({ repos }: Props) {
 
   repos.forEach((repo) => {
     if (!repo.language) return;
+
     languageMap[repo.language] =
       (languageMap[repo.language] || 0) + 1;
   });
 
-  const data = Object.entries(languageMap).map(([name, value]) => ({
-    name,
-    value,
-  }));
+  const data = Object.entries(languageMap).map(
+    ([name, value]) => ({
+      name,
+      value,
+    })
+  );
 
   if (data.length === 0) {
     return (
-      <div className="px-6 py-4 bg-gray-200 rounded-2xl shadow text-center">
+      <div className="px-6 py-4 bg-gray-200 rounded-2xl text-center">
         <h3 className="text-2xl text-stone-700 font-semibold mb-12">
           Languages Used
         </h3>
@@ -123,7 +131,7 @@ export default function LanguagePieChart({ repos }: Props) {
 
     timeoutRef.current = setTimeout(() => {
       setTooltipActive(false);
-    }, 350);
+    }, 1000);
   };
 
   return (
@@ -140,14 +148,15 @@ export default function LanguagePieChart({ repos }: Props) {
         Languages Used
       </h3>
 
-      <div className="h-68 md:h-72">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="h-68">
+        <ResponsiveContainer>
           <PieChart>
             <Pie
               data={data}
               dataKey="value"
               nameKey="name"
               outerRadius={100}
+              label
             >
               {data.map((_, index) => (
                 <Cell
