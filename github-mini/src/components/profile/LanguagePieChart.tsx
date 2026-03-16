@@ -5,7 +5,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import type { GithubRepo } from "../../types/github";
 
 interface Props {
@@ -13,37 +13,14 @@ interface Props {
 }
 
 /* ================= CUSTOM TOOLTIP ================= */
-
-interface CustomTooltipProps {
-  active?: boolean;
-  // eslint-disable-next-line
-  payload?: any;
-  label?: string;
-  coordinate?: { x: number; y: number };
-}
-
-function CustomTooltip({
-  active,
-  payload,
-  coordinate,
-}: CustomTooltipProps) {
+// eslint-disable-next-line
+function CustomTooltip({ active, payload }: any) {
   if (!active || !payload || payload.length === 0) return null;
 
-  const data = payload[0]?.payload;
+  const data = payload[0].payload;
 
   return (
-    <div
-      className="bg-white border p-2 rounded shadow text-sm"
-      style={{
-        position: "absolute",
-        left: coordinate?.x,
-        top: coordinate?.y,
-        pointerEvents: "none",
-        transform: "translate(-50%, -100%)",
-        whiteSpace: "nowrap",
-        zIndex: 1000,
-      }}
-    >
+    <div className="bg-white border p-2 rounded shadow text-sm">
       <p className="font-semibold">{data.name}</p>
       <p className="text-gray-700">Repos: {data.value}</p>
     </div>
@@ -51,23 +28,8 @@ function CustomTooltip({
 }
 
 export default function LanguagePieChart({ repos }: Props) {
-  const [tooltipActive, setTooltipActive] = useState(false);
-  const [tooltipCoord, setTooltipCoord] =
-    useState<{ x: number; y: number }>();
-
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-
-  /* ================= MOBILE DETECT ================= */
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768);
-
-    check();
-    window.addEventListener("resize", check);
-
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const [tooltipVisible, setTooltipVisible] = useState(true);
 
   if (!repos.length) return null;
 
@@ -80,12 +42,10 @@ export default function LanguagePieChart({ repos }: Props) {
       (languageMap[repo.language] || 0) + 1;
   });
 
-  const data = Object.entries(languageMap).map(
-    ([name, value]) => ({
-      name,
-      value,
-    })
-  );
+  const data = Object.entries(languageMap).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   if (data.length === 0) {
     return (
@@ -109,47 +69,34 @@ export default function LanguagePieChart({ repos }: Props) {
     );
   }
 
-  /* ================= TOUCH HANDLERS ================= */
+  /* ================= TOUCH CONTROL ================= */
 
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isMobile) return;
-
-    const touch = e.touches[0];
-
-    setTooltipCoord({
-      x: touch.clientX,
-      y: touch.clientY - 20,
-    });
-
-    setTooltipActive(true);
+  const handleInteraction = () => {
+    setTooltipVisible(true);
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const handleTouchEnd = () => {
-    if (!isMobile) return;
-
     timeoutRef.current = setTimeout(() => {
-      setTooltipActive(false);
-    }, 1000);
+      setTooltipVisible(false);
+    }, 350);
   };
 
   return (
     <div
-      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none"
-      onTouchMove={handleTouchMove}
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow"
+      style={{ WebkitTapHighlightColor: "transparent" }}
+      onTouchStart={handleInteraction}
+      onTouchMove={handleInteraction}
       onTouchEnd={handleTouchEnd}
-      style={{
-        WebkitTapHighlightColor: "transparent",
-        touchAction: "manipulation",
-      }}
     >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Languages Used
       </h3>
 
-      <div className="h-68">
-        <ResponsiveContainer>
+      <div className="h-68 md:h-72">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
@@ -166,15 +113,9 @@ export default function LanguagePieChart({ repos }: Props) {
               ))}
             </Pie>
 
-            <Tooltip
-              cursor={false}
-              content={
-                isMobile ? (
-                  <CustomTooltip coordinate={tooltipCoord} />
-                ) : undefined
-              }
-              active={isMobile ? tooltipActive : undefined}
-            />
+            {tooltipVisible && (
+              <Tooltip content={<CustomTooltip />} />
+            )}
           </PieChart>
         </ResponsiveContainer>
       </div>
