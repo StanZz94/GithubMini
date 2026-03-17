@@ -17,7 +17,7 @@ export default function ProfileAnalytics({ repos }: Props) {
         Developer Analytics
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-10">
+      <div className="grid md:grid-cols-2 gap-14 md:gap-10">
         <LanguagePieChart repos={repos} />
         <StarsBarChart repos={repos} />
         <RepoSizeChart repos={repos} />
