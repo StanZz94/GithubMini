@@ -7,41 +7,10 @@ import {
 } from "recharts";
 import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
+import CustomTooltip from "./CustomTooltip";
 
 interface Props {
   repos: GithubRepo[];
-}
-
-// ================= CUSTOM TOOLTIP =================
-interface CustomTooltipProps {
-  active?: boolean;
-  // eslint-disable-next-line
-  payload?: any;
-  coordinate?: { x: number; y: number };
-}
-
-function CustomTooltip({ active, payload, coordinate }: CustomTooltipProps) {
-  if (!active || !payload || payload.length === 0) return null;
-
-  const data = payload[0]?.payload;
-
-  return (
-    <div
-      className="bg-white border p-2 rounded shadow text-sm"
-      style={{
-        position: "absolute",
-        left: coordinate?.x,
-        top: coordinate?.y,
-        pointerEvents: "none",
-        transform: "translate(-50%, -100%)",
-        whiteSpace: "nowrap",
-        zIndex: 1000,
-      }}
-    >
-      <p className="font-semibold">{data.name}</p>
-      <p className="text-gray-700">Repos: {data.value}</p>
-    </div>
-  );
 }
 
 export default function LanguagePieChart({ repos }: Props) {
