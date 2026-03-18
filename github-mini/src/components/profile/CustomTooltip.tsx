@@ -11,7 +11,7 @@ export default function CustomTooltip({ active, payload, label, coordinate }: Cu
 
   return (
     <div
-      className="bg-white border p-2 rounded shadow text-sm"
+      className="bg-gray-100 border border-gray-500 p-2 rounded shadow text-sm"
       style={{
         position: "absolute",
         left: coordinate?.x,
