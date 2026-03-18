@@ -155,8 +155,7 @@ export default function LanguageBarChart({ repos }: Props) {
               dataKey="name"
               width={90}
               tick={({ x, y, payload }) => {
-                const color =
-                  languageColors[payload.value] || "#444";
+                const color ="#444";
 
                 return (
                   <text
@@ -181,7 +180,7 @@ export default function LanguageBarChart({ repos }: Props) {
             />
 
             {/* ✅ COLORED BARS */}
-            <Bar dataKey="value" radius={[6, 6, 6, 6]} maxBarSize={20}>
+            <Bar dataKey="value" radius={[0, 6, 6, 0]} maxBarSize={20}>
               {data.map((entry, index) => (
                 <Cell
                   key={index}
