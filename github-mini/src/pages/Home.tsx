@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchUsers } from "../hooks/useSearchUsers";
 import { useSearch } from "../context/SearchContext";
 import { useDebounce } from "../hooks/useDebounce";
+import { getApiErrorMessage } from "../utils/apiError";
 import type { GithubSearchUser } from "../types/github";
 
 export default function Home() {
@@ -14,7 +15,15 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<GithubSearchUser[]>([]);
 
-  const { data, isLoading, isError } = useSearchUsers(debouncedSearch, page);
+  const { data, isLoading, isError, error } = useSearchUsers(
+    debouncedSearch,
+    page,
+  );
+
+  const errorMessage = useMemo(
+    () => (isError ? getApiErrorMessage(error) : ""),
+    [error, isError],
+  );
 
   // 🔄 Reset when search changes (debounced)
   useEffect(() => {
@@ -93,7 +102,7 @@ export default function Home() {
       {/* Error */}
       {isError && (
         <p className="text-center text-xl font-semibold text-red-500">
-          Something went wrong.
+          {errorMessage}
         </p>
       )}
 

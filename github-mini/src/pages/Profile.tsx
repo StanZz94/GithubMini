@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useUserRepos } from "../hooks/useUserRepos";
+import { getApiErrorMessage } from "../utils/apiError";
 import ProfileAnalytics from "../components/profile/ProfileAnalytics";
 import ActivityHeatmap from "../components/profile/ActivityHeatmap";
 import UserRepos from "../components/profile/UserRepos";
@@ -13,9 +15,21 @@ export default function Profile() {
     data: user,
     isLoading: userLoading,
     isError: userError,
+    error: userErrorObject,
   } = useUser(username || "");
 
-  const { data: repos, isLoading: reposLoading } = useUserRepos(username || "");
+  const { data: repos, isLoading: reposLoading, isError: reposError, error: reposErrorObject } =
+    useUserRepos(username || "");
+
+  const userErrorMessage = useMemo(
+    () => (userError ? getApiErrorMessage(userErrorObject) : ""),
+    [userError, userErrorObject],
+  );
+
+  const reposErrorMessage = useMemo(
+    () => (reposError ? getApiErrorMessage(reposErrorObject) : ""),
+    [reposError, reposErrorObject],
+  );
 
   // ================= LOADING =================
 
@@ -27,7 +41,9 @@ export default function Profile() {
 
   if (userError || !user) {
     return (
-      <div className="text-center py-20 text-red-500">User not found.</div>
+      <div className="text-center py-20 text-red-500">
+        {userErrorMessage || "User not found."}
+      </div>
     );
   }
 
@@ -116,6 +132,12 @@ export default function Profile() {
       {reposLoading && (
         <div className="text-center text-lg font-semibold text-gray-300 mt-12">
           Loading analytics...
+        </div>
+      )}
+
+      {reposError && (
+        <div className="text-center text-lg font-semibold text-red-500 mt-12">
+          {reposErrorMessage}
         </div>
       )}
 
