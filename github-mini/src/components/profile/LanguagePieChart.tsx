@@ -5,21 +5,53 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
 import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
 
-// ================= CUSTOM TOOLTIP =================
+// ================= COLORS =================
+const languageColors: Record<string, string> = {
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  Python: "#3572A5",
+  Java: "#b07219",
+  C: "#555555",
+  "C++": "#f34b7d",
+  "C#": "#178600",
+  Go: "#00ADD8",
+  Rust: "#dea584",
+  PHP: "#4F5D95",
+  Ruby: "#701516",
+  Swift: "#ffac45",
+  Kotlin: "#A97BFF",
+  Dart: "#00B4AB",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  Shell: "#89e051",
+  Vue: "#41b883",
+  Svelte: "#ff3e00",
+};
+
+// ================= TOOLTIP =================
 // eslint-disable-next-line
 function CustomTooltip({ active, payload }: any) {
   if (!active || !payload || payload.length === 0) return null;
 
   const data = payload[0].payload;
+  const color = languageColors[data.name] || "#8884d8";
 
   return (
     <div className="bg-white border p-2 rounded shadow text-sm">
-      <p className="font-semibold">{data.name}</p>
-      <p className="text-gray-700">
+      <div className="flex items-center gap-2">
+        <span
+          className="w-3 h-3 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+        <p className="font-semibold">{data.name}</p>
+      </div>
+
+      <p className="text-gray-700 mt-1">
         Repos: {data.value} ({data.percent}%)
       </p>
     </div>
@@ -35,10 +67,9 @@ export default function LanguageBarChart({ repos }: Props) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // ================= MOBILE DETECTION =================
-  useEffect(() => {
-    // eslint-disable-next-line
-    setIsMobile(window.innerWidth <= 768);
+  // ================= MOBILE =================
+  // eslint-disable-next-line
+  useEffect(() => {setIsMobile(window.innerWidth <= 768);
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
@@ -66,7 +97,7 @@ export default function LanguageBarChart({ repos }: Props) {
       percent: ((value / total) * 100).toFixed(1),
     }))
     .sort((a, b) => b.value - a.value)
-    .slice(0, 6); // top 6
+    .slice(0, 6);
 
   if (data.length === 0) {
     return (
@@ -86,7 +117,7 @@ export default function LanguageBarChart({ repos }: Props) {
     );
   }
 
-  // ================= TOUCH HANDLERS =================
+  // ================= TOUCH =================
   const handleTouchStart = () => {
     setTooltipActive(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -114,14 +145,33 @@ export default function LanguageBarChart({ repos }: Props) {
           <BarChart
             data={data}
             layout="vertical"
-            margin={{ top: 10, right: 10, left: 20, bottom: 0 }}
+            margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
           >
             <XAxis type="number" hide />
+
+            {/* ✅ COLORED LABELS */}
             <YAxis
               type="category"
               dataKey="name"
-              width={80}
-              tick={{ fontSize: 12 }}
+              width={90}
+              tick={({ x, y, payload }) => {
+                const color =
+                  languageColors[payload.value] || "#444";
+
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    dy={4}
+                    textAnchor="end"
+                    fontSize={12}
+                    fill={color}
+                    fontWeight={600}
+                  >
+                    {payload.value}
+                  </text>
+                );
+              }}
             />
 
             <Tooltip
@@ -130,11 +180,17 @@ export default function LanguageBarChart({ repos }: Props) {
               active={isMobile ? tooltipActive : undefined}
             />
 
-            <Bar
-              dataKey="value"
-              radius={[6, 6, 6, 6]}
-              maxBarSize={20}
-            />
+            {/* ✅ COLORED BARS */}
+            <Bar dataKey="value" radius={[6, 6, 6, 6]} maxBarSize={20}>
+              {data.map((entry, index) => (
+                <Cell
+                  key={index}
+                  fill={
+                    languageColors[entry.name] || "#8884d8"
+                  }
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
