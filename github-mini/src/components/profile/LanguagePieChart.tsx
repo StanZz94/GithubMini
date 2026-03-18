@@ -1,52 +1,72 @@
 import {
-  PieChart,
-  Pie,
-  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
 import { useState, useRef, useEffect } from "react";
 import type { GithubRepo } from "../../types/github";
-import CustomTooltip from "./CustomTooltip";
+
+// ================= CUSTOM TOOLTIP =================
+// eslint-disable-next-line
+function CustomTooltip({ active, payload }: any) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  const data = payload[0].payload;
+
+  return (
+    <div className="bg-white border p-2 rounded shadow text-sm">
+      <p className="font-semibold">{data.name}</p>
+      <p className="text-gray-700">
+        Repos: {data.value} ({data.percent}%)
+      </p>
+    </div>
+  );
+}
 
 interface Props {
   repos: GithubRepo[];
 }
 
-export default function LanguagePieChart({ repos }: Props) {
+export default function LanguageBarChart({ repos }: Props) {
   const [tooltipActive, setTooltipActive] = useState(false);
-  const [tooltipCoord, setTooltipCoord] =
-    useState<{ x: number; y: number } | undefined>();
-
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   // ================= MOBILE DETECTION =================
   useEffect(() => {
-    {/* eslint-disable-next-line */}
+    // eslint-disable-next-line
     setIsMobile(window.innerWidth <= 768);
 
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-
     window.addEventListener("resize", handleResize);
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (!repos.length) return null;
 
+  // ================= DATA =================
   const languageMap: Record<string, number> = {};
 
   repos.forEach((repo) => {
     if (!repo.language) return;
-
     languageMap[repo.language] =
       (languageMap[repo.language] || 0) + 1;
   });
 
-  const data = Object.entries(languageMap).map(([name, value]) => ({
-    name,
-    value,
-  }));
+  const total = Object.values(languageMap).reduce((a, b) => a + b, 0);
+
+  const data = Object.entries(languageMap)
+    .map(([name, value]) => ({
+      name,
+      value,
+      percent: ((value / total) * 100).toFixed(1),
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 6); // top 6
 
   if (data.length === 0) {
     return (
@@ -55,12 +75,8 @@ export default function LanguagePieChart({ repos }: Props) {
           Languages Used
         </h3>
 
-        <div className="w-40 h-auto mx-auto">
-          <img
-            src="/noData.png"
-            alt="No data"
-            className="mx-auto w-full h-auto"
-          />
+        <div className="w-40 mx-auto">
+          <img src="/noData.png" alt="No data" className="w-full" />
         </div>
 
         <p className="text-gray-700 font-semibold text-xl max-w-sm mx-auto">
@@ -71,24 +87,12 @@ export default function LanguagePieChart({ repos }: Props) {
   }
 
   // ================= TOUCH HANDLERS =================
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!isMobile) return;
-
-    const touch = e.touches[0];
-
-    setTooltipCoord({
-      x: touch.clientX,
-      y: touch.clientY - 20,
-    });
-
+  const handleTouchStart = () => {
     setTooltipActive(true);
-
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const handleTouchEnd = () => {
-    if (!isMobile) return;
-
     timeoutRef.current = setTimeout(() => {
       setTooltipActive(false);
     }, 350);
@@ -96,46 +100,42 @@ export default function LanguagePieChart({ repos }: Props) {
 
   return (
     <div
-      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow relative outline-none focus:outline-none"
-      style={{
-        WebkitTapHighlightColor: "transparent",
-        touchAction: "none",
-      }}
-      onTouchMove={handleTouchMove}
+      className="bg-gray-200 px-4 md:px-6 py-4 rounded-2xl shadow"
+      style={{ WebkitTapHighlightColor: "transparent" }}
+      onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
       <h3 className="text-xl md:text-2xl text-stone-700 font-semibold mb-4 text-center">
         Languages Used
       </h3>
 
-      <div className="h-68">
+      <div className="w-full h-64 md:h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              outerRadius={100}
-              label
-            >
-              {data.map((_, index) => (
-                <Cell
-                  key={index}
-                  fill={`hsl(${index * 60}, 70%, 50%)`}
-                />
-              ))}
-            </Pie>
+          <BarChart
+            data={data}
+            layout="vertical"
+            margin={{ top: 10, right: 10, left: 20, bottom: 0 }}
+          >
+            <XAxis type="number" hide />
+            <YAxis
+              type="category"
+              dataKey="name"
+              width={80}
+              tick={{ fontSize: 12 }}
+            />
 
             <Tooltip
-              content={
-                isMobile ? (
-                  <CustomTooltip coordinate={tooltipCoord} />
-                ) : undefined
-              }
+              content={<CustomTooltip />}
               cursor={false}
               active={isMobile ? tooltipActive : undefined}
             />
-          </PieChart>
+
+            <Bar
+              dataKey="value"
+              radius={[6, 6, 6, 6]}
+              maxBarSize={20}
+            />
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
